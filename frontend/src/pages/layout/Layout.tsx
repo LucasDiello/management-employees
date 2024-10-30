@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "../../components/header/Header";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
+import "./layout.scss";
+import { useAuth } from "../../context/authContext";
 
 const Layout = () => {
   return (
-    <div>
+    <div className="layout">
       <div>
         <Header />
       </div>
@@ -16,7 +18,18 @@ const Layout = () => {
 };
 
 const RequireAuth = () => {
-  return <div>{/* Increment auth feature */}</div>;
+  const { signed } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!signed) {
+      navigate("/login");
+    }
+  }, [signed, navigate]);
+
+  if (!signed) return null;
+
+  return <Outlet />;
 };
 
 export { Layout, RequireAuth };
