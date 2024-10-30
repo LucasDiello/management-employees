@@ -17,6 +17,9 @@ import DarkModeRoundedIcon from "@mui/icons-material/DarkModeRounded";
 import LightModeRoundedIcon from "@mui/icons-material/LightModeRounded";
 import BadgeRoundedIcon from "@mui/icons-material/BadgeRounded";
 import GoogleIcon from "./GoogleIcon";
+import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { auth } from "../../libs/firebaseConfig";
+import { useAuth } from "../../context/authContext";
 
 interface FormElements extends HTMLFormControlsCollection {
   email: HTMLInputElement;
@@ -54,6 +57,27 @@ function ColorSchemeToggle(props: IconButtonProps) {
 const customTheme = extendTheme({ colorSchemes: { light: {}, dark: {} } });
 
 export default function Login() {
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [Error, setError] = React.useState("");
+
+  const { updateUser } = useAuth();
+
+  const [signInWithEmailAndPassword, user, loading, error] =
+    useSignInWithEmailAndPassword(auth);
+
+  const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    await signInWithEmailAndPassword(email, password).catch((error) => {
+      setError(error.message);
+    });
+    const token = (await auth.currentUser?.getIdToken()) as string;
+    updateUser(auth.currentUser);
+    localStorage.setItem("token", token);
+  };
+  if (user) {
+    console.log(user);
+  }
   return (
     <CssVarsProvider theme={customTheme} disableTransitionOnChange>
       <CssBaseline />
@@ -156,26 +180,26 @@ export default function Login() {
               ou
             </Divider>
             <Stack sx={{ gap: 4, mt: 2 }}>
-              <form
-                onSubmit={(event: React.FormEvent<SignInFormElement>) => {
-                  event.preventDefault();
-                  const formElements = event.currentTarget.elements;
-                  const data = {
-                    email: formElements.email.value,
-                    password: formElements.password.value,
-                    persistent: formElements.persistent.checked,
-                  };
-                  alert(JSON.stringify(data, null, 2));
-                }}
-              >
+              <form onSubmit={handleSignIn}>
                 <FormControl required>
                   <FormLabel>E-mail</FormLabel>
-                  <Input type="email" name="email" />
+                  <Input
+                    type="email"
+                    name="email"
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
                 </FormControl>
                 <FormControl required>
                   <FormLabel>Senha</FormLabel>
-                  <Input type="password" name="password" />
+                  <Input
+                    type="password"
+                    name="password"
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
                 </FormControl>
+                <Typography level="body-xs" color="danger">
+                  {Error}
+                </Typography>
                 <Stack sx={{ gap: 4, mt: 2 }}>
                   <Box
                     sx={{

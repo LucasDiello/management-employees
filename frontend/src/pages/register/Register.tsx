@@ -17,6 +17,9 @@ import DarkModeRoundedIcon from "@mui/icons-material/DarkModeRounded";
 import LightModeRoundedIcon from "@mui/icons-material/LightModeRounded";
 import BadgeRoundedIcon from "@mui/icons-material/BadgeRounded";
 import GoogleIcon from "../login/GoogleIcon";
+import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { auth } from "../../libs/firebaseConfig";
+import { updateProfile, UserCredential } from "firebase/auth";
 
 interface FormElements extends HTMLFormControlsCollection {
   fullName: HTMLInputElement;
@@ -56,6 +59,30 @@ function ColorSchemeToggle(props: IconButtonProps) {
 const customTheme = extendTheme({ colorSchemes: { light: {}, dark: {} } });
 
 export default function Register() {
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [fullName, setFullName] = React.useState("");
+  const [createUserWithEmailAndPassword, user, loading, error] =
+    useCreateUserWithEmailAndPassword(auth);
+
+  const handleSignOut = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        email,
+        password
+      );
+      if (userCredential) {
+        // Adiciona o nome completo ao perfil do usuário
+        await updateProfile(userCredential.user, { displayName: fullName });
+      } else {
+        throw new Error("Failed to create user");
+      }
+      console.log("Conta criada com sucesso!");
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <CssVarsProvider theme={customTheme} disableTransitionOnChange>
       <CssBaseline />
@@ -182,31 +209,30 @@ export default function Register() {
               ou
             </Divider>
             <Stack sx={{ gap: 4, mt: 2 }}>
-              <form
-                onSubmit={(event: React.FormEvent<SignUpFormElement>) => {
-                  event.preventDefault();
-                  const formElements = event.currentTarget.elements;
-                  const data = {
-                    fullName: formElements.fullName.value,
-                    email: formElements.email.value,
-                    password: formElements.password.value,
-                    confirmPassword: formElements.confirmPassword.value,
-                    terms: formElements.terms.checked,
-                  };
-                  alert(JSON.stringify(data, null, 2));
-                }}
-              >
+              <form onSubmit={handleSignOut}>
                 <FormControl required>
                   <FormLabel>Nome Completo</FormLabel>
-                  <Input type="text" name="fullName" />
+                  <Input
+                    type="text"
+                    name="fullName"
+                    onChange={(e) => setFullName(e.target.value)}
+                  />
                 </FormControl>
                 <FormControl required>
                   <FormLabel>Email</FormLabel>
-                  <Input type="email" name="email" />
+                  <Input
+                    type="email"
+                    name="email"
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
                 </FormControl>
                 <FormControl required>
                   <FormLabel>Senha</FormLabel>
-                  <Input type="password" name="password" />
+                  <Input
+                    type="password"
+                    name="password"
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
                 </FormControl>
                 <FormControl required>
                   <FormLabel>Confirmar Senha</FormLabel>
