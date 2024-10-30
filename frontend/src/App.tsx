@@ -1,12 +1,22 @@
 import React from "react";
-import "./styles/App.scss";
+import "./App.scss";
+import Login from "./pages/login/Login";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { Layout } from "./pages/layout/Layout";
 
 function App() {
-  return (
-    <div>
-      <h1>Hello World</h1>
-    </div>
-  );
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <Layout />,
+      children: [],
+    },
+    {
+      path: "/login",
+      element: <Login />,
+    },
+  ]);
+  return <RouterProvider router={router} />;
 }
 
 export default App;
