@@ -1,3 +1,272 @@
-.rounded {
+    .rounded {
     border-radius: 50%;
+    width: 150px;
+}
+
+.header-form-employees {
+    padding: 0;
+    height: 89px;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background-color: white;
+}
+.content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 89px;
+    margin-right: auto;
+    margin-left: auto;
+    max-width: 1366px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.header-form-employees > div > div:first-child {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.header-form-employees > div > div:first-child > div:last-child > p:first-child {
+    font-size: 0.8rem;
+    color: #555E68;
+    padding: 0;
+}
+
+.header-form-employees > div > div:first-child > div:last-child > p:last-child {
+    font-size: 1rem;
+    color: #333;
+    font-weight: bold;
+    padding: 0;
+
+}
+
+.header-form-employees > div > div:first-child > div:first-child {
+    border-right: 1px solid #ccc;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 89px;
+    padding-right: 2rem;
+}
+
+.title-infos {
+    min-width: 60%;
+    margin-bottom: 1rem;
+}
+
+.title-infos > h1 {
+    font-size: 3rem;
+    color: #333;
+    padding: 0;
+    letter-spacing: 1px;
+}
+
+.title-infos > p {
+    font-size: 0.8rem;
+    color: #555E68;
+    padding: 0;
+}
+
+.steps-loading {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    height: 8px;
+}
+
+.form-step1 > h2, .form-step2 > h2 {
+    font-size: 0.8rem;
+    color: #333;
+    padding: 0;
+    margin-block: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: 0.2rem;
+}
+
+.form-input-group1 {
+    display: flex;
+    height: 170px;
+    gap: 30px;
+    }
+
+.form-input-group2 {
+    padding-top: 35px;
+    padding-bottom: 35px;
+    display: flex;
+    gap: 10px;
+}
+
+.form-input-group2 > label {
+    width: 33.33%;
+}
+
+.form-input-group3 {
+    display: flex;
+    padding-bottom: 35px;
+}
+
+.form-input-group3 > label:first-child {
+    width: 33.33%;
+    margin-right: 5px;
+}
+
+.form-input-group3 > label:nth-child(2) {
+    width: 10.33%;
+    margin-right: 10px;
+}
+
+.form-input-group3 > label:last-child {
+    width: 56.33%;
+}
+
+.form-input-group4 {
+    display: flex;
+    gap: 10px;
+    padding-bottom: 35px;
+}
+
+.content-input-group1 {
+    display: flex;
+    width: 60%;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.profile-image {
+    width: 40%;
+    display: flex;
+}
+
+.profile-image > div:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+.profile-image > div:last-child > h2 {
+    font-size: 1.2rem;
+    color: #333;
+    padding: 0;
+}
+
+.btn-photo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-photo > button {
+border: none;
+width: 25px;
+height: 25px;
+background-color: #1fa4f7;
+border-radius: 100%;
+}
+
+.btn-photo > p {
+    font-size: 0.8rem;
+    color: #1fa4f7;
+    padding: 0;
+}
+
+.checkbox-rounded {
+    display: flex;
+}
+
+
+.layout-form-add-employees {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    margin-top: 100px;
+  }
+
+  .buttons {
+    min-width: 60%;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .btn-previous {
+    background-color: inherit;
+    color: #333;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    width: 100px;
+    height: 30px;
+    gap: 10px;
+    padding-inline: 0.5rem;
+    color: #5bb9f4;
+    font-weight: 600;
+  }
+
+  .btn-previous:hover, .btn-next:hover {
+    background-color: #1fa4f7;
+    color: white;
+    border-radius: 15px;
+  }
+
+  .btn-next {   
+    background-color: inherit;
+    color: #333;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 30px;
+    gap: 10px;
+    padding-inline: 0.5rem;
+    color: #5bb9f4;
+    font-weight: 600;
+  }
+
+label {
+    display: block;
+    font-size: 0.6rem;
+    color: #555E68;
+    padding: 0;
+}
+
+input, select, .input {
+    display: block;
+    width: 100%;
+    border: 2px solid red;
+    padding: 0.5rem ;
+}
+
+form {
+    min-width: 60%;
+}
+
+img {
+    width: 120px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+button {
+    cursor: pointer;
 }

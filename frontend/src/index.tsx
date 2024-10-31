@@ -3,16 +3,20 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import AuthProvider from "./context/authContext";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
-  <AuthProvider>
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  </AuthProvider>
+  <LocalizationProvider dateAdapter={AdapterDayjs}>
+    <AuthProvider>
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>
+    </AuthProvider>
+  </LocalizationProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function
