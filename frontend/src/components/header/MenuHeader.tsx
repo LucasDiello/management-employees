@@ -49,7 +49,14 @@ export default function MenuHeader() {
           },
         }}
       >
-        <MenuItem onClick={handleClose}>Funcionários</MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            navigate("/employees");
+          }}
+        >
+          Funcionários
+        </MenuItem>
         <MenuItem
           onClick={() => {
             handleClose();

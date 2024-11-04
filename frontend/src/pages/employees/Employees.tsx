@@ -37,6 +37,11 @@ import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import { apiRequest } from "../../libs/apiRequest";
 import { getComparator, Order } from "../../utils";
 import RowMenu from "./RowMenu";
+import { ButtonBase, CircularProgress } from "@mui/material";
+import { getDownloadURL, listAll, ref } from "firebase/storage";
+import { storage } from "../../libs/firebaseConfig";
+import { FormData } from "../../types";
+import gerarPDF from "../../temp/gerarPDF";
 
 type Status = "Contratado" | "Refunded" | "Demitido";
 
@@ -74,7 +79,6 @@ export default function OrderTable() {
     })();
   }, []);
 
-  console.log(data);
   const renderFilters = () => (
     <React.Fragment>
       <FormControl size="sm">
@@ -110,6 +114,16 @@ export default function OrderTable() {
     );
   };
 
+  const handleDownloadPDF = async (formData: FormData) => {
+    try {
+      // Cria uma referência para a pasta onde os PDFs estão armazenados
+      console.log(formData);
+      gerarPDF(formData, true);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   // Calcular os itens que devem ser exibidos na tabela
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentItems = (data || []).slice(
@@ -124,7 +138,11 @@ export default function OrderTable() {
   const pages = Array.from({ length: totalPages }, (_, index) => index + 1);
 
   if (loading) {
-    return <Typography>Loading...</Typography>;
+    return (
+      <Typography>
+        <CircularProgress />
+      </Typography>
+    );
   }
 
   return (
@@ -328,9 +346,14 @@ export default function OrderTable() {
                 </td>
                 <td>
                   <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-                    <Link level="body-xs" component="button">
+                    <ButtonBase
+                      level="body-xs"
+                      component="button"
+                      onClick={() => handleDownloadPDF(row)}
+                      sx={{ color: "blue" }}
+                    >
                       Download
-                    </Link>
+                    </ButtonBase>
                     <RowMenu row={row} />
                   </Box>
                 </td>

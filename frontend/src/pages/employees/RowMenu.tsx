@@ -27,7 +27,13 @@ function RowMenu({ row }: { row: any }) {
         >
           Editar
         </MenuItem>
-        <MenuItem>Histórico</MenuItem>
+        <MenuItem
+          onClick={() => {
+            navigate(`/employee/history/${row.id}`);
+          }}
+        >
+          Histórico
+        </MenuItem>
         <Divider />
         <MenuItem color="danger">Delete</MenuItem>
       </Menu>

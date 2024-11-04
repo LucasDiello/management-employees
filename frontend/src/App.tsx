@@ -7,6 +7,8 @@ import Employees from "./pages/employees/Employees";
 import Register from "./pages/register/Register";
 import EmployeesUpdate from "./pages/employeesUpdate/EmployeesUpdate";
 import AddEmployee from "./pages/addemployee/AddEmployee";
+import EmployeeHistory from "./pages/employeeHistory/EmployeeHistory";
+import { historyEmployeeLoader } from "./libs/loader";
 
 function App() {
   const router = createBrowserRouter([
@@ -31,6 +33,11 @@ function App() {
         {
           path: "/employees/add",
           element: <AddEmployee />,
+        },
+        {
+          path: "/employee/history/:id",
+          element: <EmployeeHistory />,
+          loader: historyEmployeeLoader,
         },
       ],
     },
