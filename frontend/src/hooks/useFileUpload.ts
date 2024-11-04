@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import { ref, uploadBytesResumable } from "firebase/storage";
 
-const useFileUpload = (storage: any, nome: string) => {
+const useFileUpload = (storage: any, id: string) => {
+  console.log("entrei no useFileUpload", id);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false); // Novo estado para controlar o upload
 
   const onDrop = (acceptedFiles: File[]) => {
     const selectedFile = acceptedFiles[0];
@@ -20,24 +22,27 @@ const useFileUpload = (storage: any, nome: string) => {
     noClick: true,
   });
 
-  const handleUpload = async (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("entrei")
-    console.log(file)
-    if (!file) return;
-    try {
-      console.log("entrei no try")
-        const storageRef = ref(
-          storage,
-          `images/${nome}/profile.jpg`
-        );
-        uploadBytesResumable(storageRef, file as Blob);
+  useEffect(() => {
+    if (!file || !id || isUploading) return; // Garante que o id está correto e evita uploads duplicados
+
+    const handleUpload = async () => {
+      console.log("entrei no try");
+      setIsUploading(true);
+      try {
+        const storageRef = ref(storage, `images/${id}/profile.jpg`);
+        await uploadBytesResumable(storageRef, file as Blob);
+        console.log("Upload completo");
       } catch (error) {
         console.error(error);
+      } finally {
+        setIsUploading(false);
       }
-  };
+    };
 
-  return { previewUrl, getInputProps, isDragActive, handleUpload, setPreviewUrl };
+    handleUpload();
+  }, [id, file, storage]); // Executa o upload apenas quando o id e o arquivo estão corretos
+
+  return { previewUrl, getInputProps, isDragActive, setPreviewUrl };
 };
 
 export default useFileUpload;

@@ -13,3 +13,14 @@ export const historyEmployeeLoader: LoaderFunction = async ({ request, params })
     const res2 = await apiRequest(`/employee/${id}`);
     return { data: res.data, currentData: res2.data };
 };
+
+export const employeeLoader: LoaderFunction = async ({ request, params }) => {
+    const { id } = params;
+
+    if (!id) {
+        throw new Error("ID do funcionário não fornecido");
+    }
+
+    const res = await apiRequest(`/employee/${id}`);
+    return res.data;
+};

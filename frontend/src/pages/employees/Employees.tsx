@@ -42,6 +42,9 @@ import { getDownloadURL, listAll, ref } from "firebase/storage";
 import { storage } from "../../libs/firebaseConfig";
 import { FormData } from "../../types";
 import gerarPDF from "../../temp/gerarPDF";
+import Loading from "../../components/loading/Loading";
+import { useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
 
 type Status = "Contratado" | "Refunded" | "Demitido";
 
@@ -64,20 +67,23 @@ export default function OrderTable() {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 8;
+  const navigate = useNavigate();
+
+  const fetchEmployees = async () => {
+    try {
+      const response = await apiRequest("/employees");
+      setData(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    (async () => {
-      try {
-        const response = await apiRequest("/employees");
-        setData(response.data);
-        setLoading(false);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, []);
+    fetchEmployees();
+  }, [data]);
 
   const renderFilters = () => (
     <React.Fragment>
@@ -138,11 +144,7 @@ export default function OrderTable() {
   const pages = Array.from({ length: totalPages }, (_, index) => index + 1);
 
   if (loading) {
-    return (
-      <Typography>
-        <CircularProgress />
-      </Typography>
-    );
+    return <Loading />;
   }
 
   return (
@@ -278,7 +280,7 @@ export default function OrderTable() {
                   Inverter
                 </Link>
               </th>
-              <th style={{ width: 140, padding: "12px 6px" }}>Data</th>
+              <th style={{ width: 140, padding: "12px 6px" }}>Data Admissão</th>
               <th style={{ width: 140, padding: "12px 6px" }}>Status</th>
               <th style={{ width: 240, padding: "12px 6px" }}>Funcionário</th>
               <th style={{ width: 140, padding: "12px 6px" }}>Cargo</th>
@@ -309,7 +311,7 @@ export default function OrderTable() {
                 </td>
                 <td>
                   <Typography level="body-xs">
-                    {row.funcionario.dataAdmissao}
+                    {dayjs(row.funcionario.dataAdmissao).format("DD-MM-YYYY")}
                   </Typography>
                 </td>
                 <td>
@@ -362,6 +364,23 @@ export default function OrderTable() {
           </tbody>
         </Table>
       </Sheet>
+      {currentItems.length === 0 && (
+        <>
+          <Typography level="body-xs" sx={{ textAlign: "center", mt: 2 }}>
+            Nenhum funcionário encontrado
+          </Typography>
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+            <Button
+              size="sm"
+              variant="outlined"
+              color="primary"
+              onClick={() => navigate("/employees/add")}
+            >
+              Adicionar funcionário
+            </Button>
+          </Box>
+        </>
+      )}
       <Box
         className="Pagination-laptopUp"
         sx={{
@@ -382,7 +401,7 @@ export default function OrderTable() {
           onClick={() => handlePageChange("prev")}
           disabled={currentPage === 1}
         >
-          Previous
+          Anterior
         </Button>
         <Box sx={{ flex: 1 }} />
         {pages.map((page) => (
@@ -405,7 +424,7 @@ export default function OrderTable() {
           onClick={() => handlePageChange("next")}
           disabled={currentPage * itemsPerPage >= data.length}
         >
-          Next
+          Próximo
         </Button>
       </Box>
     </React.Fragment>

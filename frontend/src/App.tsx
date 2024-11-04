@@ -8,7 +8,7 @@ import Register from "./pages/register/Register";
 import EmployeesUpdate from "./pages/employeesUpdate/EmployeesUpdate";
 import AddEmployee from "./pages/addemployee/AddEmployee";
 import EmployeeHistory from "./pages/employeeHistory/EmployeeHistory";
-import { historyEmployeeLoader } from "./libs/loader";
+import { employeeLoader, historyEmployeeLoader } from "./libs/loader";
 
 function App() {
   const router = createBrowserRouter([
@@ -29,6 +29,7 @@ function App() {
         {
           path: "/employees/update/:id",
           element: <EmployeesUpdate />,
+          loader: employeeLoader,
         },
         {
           path: "/employees/add",

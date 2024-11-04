@@ -3,11 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { FormData } from "../types";
 import { SelectChangeEvent } from "@mui/material";
 import gerarPDF from "../temp/gerarPDF";
-import useFileUpload from "./useFileUpload";
-import { storage } from "../libs/firebaseConfig";
 import { apiRequest } from "../libs/apiRequest";
+import { formDataSchema } from "../schema/formDataSchema";
+import { z } from "zod";
+import { format } from "date-fns";
+import dayjs from "dayjs";
 
-const useFormWizard = () => {
+export const useFormWizard = (initialData : FormData | null = null) => {
+    
     const steps = ["1", "2", "3"];
     const stepsText: { [key: string]: string }[] = [
       { "0": "Informações de Contato" },
@@ -15,37 +18,39 @@ const useFormWizard = () => {
       { "2": "Conclusão" },
     ];
     const [currentStep, setCurrentStep] = useState<number>(0);
-    const [formData, setFormData] = useState<FormData>({
-      contato: {
-        nome: "",
-        email: "",
-        sexo: "",
-        cpf: "",
-        rg: "",
-        endereco: {
-          rua: "",
-          numero: "",
-          bairro: "",
-          cidade: "",
-          estado: "",
-          cep: "",
+    const [formData, setFormData] = useState<FormData>(
+      initialData || {
+        contato: {
+          nome: "",
+          email: "",
+          sexo: "",
+          cpf: "",
+          rg: "",
+          endereco: {
+            rua: "",
+            numero: "",
+            bairro: "",
+            cidade: "",
+            estado: "",
+            cep: "",
+          },
+          telefone: "",
+          fotoPerfil: "",
+          dataAniversario: "",
         },
-        telefone: "",
-        fotoPerfil: "",
-        dataAniversario: "",
-      },
-      funcionario: {
-        status: "",
-        cargo: "",
-        dataAdmissao: "",
-        setor: "",
-        salario: "",
-      },
-    });
+        funcionario: {
+          status: "",
+          cargo: "",
+          dataAdmissao: "",
+          setor: "",
+          salario: "",
+        },
+      }
+    );
+    const [idEmployee, setIdEmployee] = useState<string>("");
     const [loading, setLoading] = useState(false);
-    const { handleUpload } = useFileUpload(storage, formData.contato.nome);
-    
-    const navigate = useNavigate();
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
     const handleInputChange = (
       e:
         | React.ChangeEvent<
@@ -56,6 +61,8 @@ const useFormWizard = () => {
       field: string,
       subfield?: string
     ) => {
+
+
       setFormData((prevData) => ({
         ...prevData,
         [section]: {
@@ -71,31 +78,49 @@ const useFormWizard = () => {
       }));
     };
   
-    
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       setLoading(true);
       try {
-        apiRequest.post("/employees", formData);
-        gerarPDF(formData);
-        handleUpload(e);
-        setLoading(false);
-        navigate("/employees");
+          formDataSchema.parse(formData);
+        if (initialData) {
+          // Atualizar
+          console.log(initialData)
+          console.log("updatedEmployee", formData)
+          await apiRequest.put(`/employees/${initialData.id}`, formData);
+          gerarPDF(formData);
+        } else {
+          // Criar
+          const {data} = await apiRequest.post("/employees", formData);
+         setIdEmployee(data.id);
+         gerarPDF(formData);
+        }
       } catch (error) {
+        if (error instanceof z.ZodError) {
+            const formattedErrors: { [key: string]: string } = {};
+            error.errors.forEach((err) => {
+              formattedErrors[err.path.join('.')] = err.message;
+            });
+            setErrors(formattedErrors); // Armazenar os erros no estado
+          }
         console.error(error);
       }
+      finally {
+        setLoading(false);
+        }
     };
-    
-   return {
-        steps,
-        stepsText,
-        currentStep,
-        setCurrentStep,
-        formData,
-        loading,
-        handleInputChange,
-        handleSubmit,
-        };  
-}
-
-export default useFormWizard;
+  
+    return {
+      idEmployee,
+      steps,
+      stepsText,
+      currentStep,
+      setCurrentStep,
+      formData,
+      loading,
+      handleInputChange,
+      handleSubmit,
+        errors
+    };
+  };
+  
