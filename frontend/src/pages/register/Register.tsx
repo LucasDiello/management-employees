@@ -20,6 +20,9 @@ import GoogleIcon from "../login/GoogleIcon";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { auth } from "../../libs/firebaseConfig";
 import { updateProfile, UserCredential } from "firebase/auth";
+import { z } from "zod";
+import { useNavigate } from "react-router-dom";
+import { schemaRegister } from "../../schema/formDataSchema";
 
 interface FormElements extends HTMLFormControlsCollection {
   fullName: HTMLInputElement;
@@ -62,25 +65,42 @@ export default function Register() {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [fullName, setFullName] = React.useState("");
-  const [createUserWithEmailAndPassword, user, loading, error] =
+  const [error, setError] = React.useState("");
+  const navigate = useNavigate();
+  const [createUserWithEmailAndPassword] =
     useCreateUserWithEmailAndPassword(auth);
 
   const handleSignOut = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setError("");
     try {
+      const formData = {
+        fullName,
+        email,
+        password,
+        confirmPassword: (e.currentTarget as SignUpFormElement).elements
+          .confirmPassword.value,
+      };
+      schemaRegister.parse(formData);
+
       const userCredential = await createUserWithEmailAndPassword(
         email,
         password
       );
+      console.log(userCredential);
       if (userCredential) {
-        // Adiciona o nome completo ao perfil do usuário
         await updateProfile(userCredential.user, { displayName: fullName });
+        navigate("/login");
       } else {
-        throw new Error("Failed to create user");
+        setError("Erro ao criar a conta. Tente novamente.");
       }
-      console.log("Conta criada com sucesso!");
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        setError(err.errors.map((e) => e.message).join("\n"));
+      } else {
+        console.error(err);
+        setError("Erro ao criar a conta. Tente novamente.");
+      }
     }
   };
   return (
@@ -238,6 +258,9 @@ export default function Register() {
                   <FormLabel>Confirmar Senha</FormLabel>
                   <Input type="password" name="confirmPassword" />
                 </FormControl>
+                <Typography level="body-xs" color="danger">
+                  {error}
+                </Typography>
                 <Stack sx={{ gap: 4, mt: 2 }}>
                   <Box
                     sx={{

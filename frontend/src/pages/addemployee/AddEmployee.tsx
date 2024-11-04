@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MenuHeader from "../../components/header/MenuHeader";
 import "./addemployee.css";
 import { storage } from "../../libs/firebaseConfig";
@@ -18,9 +18,10 @@ import EditIcon from "@mui/icons-material/Edit";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import userDefault from "./userDefault.jpg";
 import useFileUpload from "../../hooks/useFileUpload";
-import useFormWizard from "../../hooks/useFormWizard";
 import ProfileImageUpload from "./ProfileImageUpload";
 import Step1Form from "./Step1Form";
+import { useFormWizard } from "../../hooks/useFormWizard";
+import { useNavigate } from "react-router-dom";
 
 const AddEmployee = () => {
   const {
@@ -32,11 +33,19 @@ const AddEmployee = () => {
     loading,
     handleInputChange,
     handleSubmit,
+    idEmployee,
+    errors,
   } = useFormWizard();
-  const { previewUrl, getInputProps, handleUpload } = useFileUpload(
-    storage,
-    formData.contato.nome
-  );
+  const navigate = useNavigate();
+
+  const { previewUrl, getInputProps } = useFileUpload(storage, idEmployee);
+
+  useEffect(() => {
+    if (idEmployee) {
+      console.log("idEmployee", idEmployee);
+      navigate(`/employees`);
+    }
+  }, [idEmployee]);
 
   const loadingWidth =
     currentStep === 0 ? "33%" : currentStep === 1 ? "66%" : "100%";
@@ -44,6 +53,7 @@ const AddEmployee = () => {
   if (loading) {
     return <h1>Carregando...</h1>;
   }
+
   return (
     <div>
       <header className="header-form-employees">
@@ -96,7 +106,9 @@ const AddEmployee = () => {
         <form
           onSubmit={(e) => {
             handleSubmit(e);
-            handleUpload(e);
+            if (errors) {
+              setCurrentStep(currentStep - 2);
+            }
           }}
         >
           {currentStep === 0 && (
@@ -105,6 +117,7 @@ const AddEmployee = () => {
               handleInputChange={handleInputChange}
               previewUrl={previewUrl}
               getInputProps={getInputProps}
+              errors={errors}
             />
           )}
 
@@ -112,6 +125,7 @@ const AddEmployee = () => {
             <Step2Form
               formData={formData}
               handleInputChange={handleInputChange}
+              errors={errors}
             />
           )}
           {currentStep === 2 && <Step3Form formData={formData} />}
@@ -126,7 +140,7 @@ const AddEmployee = () => {
               Anterior
             </button>
             {currentStep === 2 && (
-              <button type="submit" onClick={() => {}} className="btn-next">
+              <button type="submit" className="btn-next">
                 Finalizar
               </button>
             )}

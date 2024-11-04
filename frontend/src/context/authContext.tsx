@@ -18,7 +18,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   );
 
   const updateUser = (data: any) => {
-    localStorage.setItem("user", JSON.stringify(data));
+    localStorage.setItem("user", JSON.parse(JSON.stringify(data)));
     setCurrentUser(data);
   };
 

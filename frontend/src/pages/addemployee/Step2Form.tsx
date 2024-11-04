@@ -7,14 +7,17 @@ import {
   InputLabel,
   MenuItem,
   SelectChangeEvent,
+  FormHelperText,
 } from "@mui/material";
 
 const Step2Form = ({
   formData,
   handleInputChange,
+  errors,
 }: {
   formData: any;
   handleInputChange: any;
+  errors: { [key: string]: string };
 }) => {
   return (
     <>
@@ -27,6 +30,7 @@ const Step2Form = ({
               display: "block",
               marginBottom: "0.3rem",
             }}
+            error={!!errors["funcionario.status"]}
           >
             <InputLabel id="demo-simple-select-filled-label">Status</InputLabel>
             <Select
@@ -46,6 +50,9 @@ const Step2Form = ({
               <MenuItem value="Contratado">Contratado</MenuItem>
               <MenuItem value="Demitido">Demitido</MenuItem>
             </Select>
+            {errors["funcionario.status"] && (
+              <FormHelperText>{errors["funcionario.status"]}</FormHelperText>
+            )}
           </FormControl>
           Ex: Empregado
         </label>
@@ -55,6 +62,7 @@ const Step2Form = ({
             sx={{
               display: "block",
             }}
+            error={!!errors["funcionario.cargo"]}
           >
             <InputLabel id="demo-simple-select-filled-label">Cargo</InputLabel>
             <Select
@@ -77,6 +85,9 @@ const Step2Form = ({
               <MenuItem value="Analista">Analista</MenuItem>
               <MenuItem value="Outro">Outro</MenuItem>
             </Select>
+            {errors["funcionario.cargo"] && (
+              <FormHelperText>{errors["funcionario.cargo"]}</FormHelperText>
+            )}
           </FormControl>
           Ex: Desenvolvedor
         </label>
@@ -96,7 +107,7 @@ const Step2Form = ({
             variant="filled"
             className="input"
           />
-          Ex: 1990-01-01
+          Ex: 01/01/2021
         </label>
         <label>
           <FormControl
@@ -105,6 +116,7 @@ const Step2Form = ({
               display: "block",
               marginBottom: "0.3rem",
             }}
+            error={!!errors["funcionario.setor"]}
           >
             <InputLabel id="demo-simple-select-filled-label">Setor</InputLabel>
             <Select
@@ -126,6 +138,9 @@ const Step2Form = ({
               <MenuItem value="Administrativo">Administrativo</MenuItem>
               <MenuItem value="Outro">Outro</MenuItem>
             </Select>
+            {errors["funcionario.setor"] && (
+              <FormHelperText>{errors["funcionario.setor"]}</FormHelperText>
+            )}
           </FormControl>
           Ex: Financeiro
         </label>
@@ -139,6 +154,7 @@ const Step2Form = ({
             label="Salário"
             variant="filled"
             className="input"
+            error={!!errors["funcionario.salario"]}
           />
           Ex: 1000.00
         </label>

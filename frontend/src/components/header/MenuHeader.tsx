@@ -4,8 +4,9 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useNavigate } from "react-router-dom";
-
-const options = ["Funcionários", "Adicionar Funcionário", "Sair"];
+import { signOut } from "firebase/auth";
+import { auth } from "../../libs/firebaseConfig";
+import { useAuth } from "../../context/authContext";
 
 const ITEM_HEIGHT = 48;
 
@@ -16,10 +17,18 @@ export default function MenuHeader() {
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
+  const { currentUser } = useAuth();
   const handleClose = () => {
     setAnchorEl(null);
   };
 
+  const handleLogout = () => {
+    signOut(auth);
+    navigate("/login");
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+  };
+  console.log(currentUser);
   return (
     <div>
       <IconButton
@@ -65,7 +74,9 @@ export default function MenuHeader() {
         >
           Adicionar Funcionário
         </MenuItem>
-        <MenuItem onClick={handleClose}>Sair</MenuItem>
+        <MenuItem onClick={handleLogout}>
+          {currentUser ? `Sair` : "Login"}
+        </MenuItem>
       </Menu>
     </div>
   );

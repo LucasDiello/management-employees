@@ -39,7 +39,7 @@ const EmployeeHistory = () => {
     currentData.funcionario.setor,
     currentData.funcionario.salario,
   ];
-
+  console.log(data, currentData);
   return (
     <div className="employee-history layout">
       <Header />
@@ -60,7 +60,7 @@ const EmployeeHistory = () => {
       <section>
         <div>
           {/* Tabela de alterações com Material-UI */}
-          {data.length > 1 ? (
+          {data.length ? (
             <>
               <h3>Última Atualização</h3>
               <TableContainer component={Paper}>

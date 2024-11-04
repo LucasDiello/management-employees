@@ -20,14 +20,12 @@ import GoogleIcon from "./GoogleIcon";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { auth } from "../../libs/firebaseConfig";
 import { useAuth } from "../../context/authContext";
+import { useNavigate } from "react-router-dom";
 
 interface FormElements extends HTMLFormControlsCollection {
   email: HTMLInputElement;
   password: HTMLInputElement;
   persistent: HTMLInputElement;
-}
-interface SignInFormElement extends HTMLFormElement {
-  readonly elements: FormElements;
 }
 
 function ColorSchemeToggle(props: IconButtonProps) {
@@ -59,25 +57,32 @@ const customTheme = extendTheme({ colorSchemes: { light: {}, dark: {} } });
 export default function Login() {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const [Error, setError] = React.useState("");
+  const [error, setError] = React.useState("");
+  const [attemptCount, setAttemptCount] = React.useState(0); // contador de tentativas
 
+  const navigate = useNavigate();
   const { updateUser } = useAuth();
 
-  const [signInWithEmailAndPassword, user, loading, error] =
-    useSignInWithEmailAndPassword(auth);
+  const [signInWithEmailAndPassword] = useSignInWithEmailAndPassword(auth);
 
   const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await signInWithEmailAndPassword(email, password).catch((error) => {
-      setError(error.message);
-    });
-    const token = (await auth.currentUser?.getIdToken()) as string;
-    updateUser(auth.currentUser);
-    localStorage.setItem("token", token);
+
+    const res = await signInWithEmailAndPassword(email, password);
+    if (auth.currentUser) {
+      const token = await auth.currentUser.getIdToken();
+      updateUser(auth.currentUser);
+      localStorage.setItem("token", token);
+
+      navigate("/employees");
+    }
+
+    if (!auth.currentUser) {
+      setError(`E-mail ou senha inválidos. Tentativa ${attemptCount + 1}`);
+      setAttemptCount(attemptCount + 1);
+    }
   };
-  if (user) {
-    console.log(user);
-  }
+
   return (
     <CssVarsProvider theme={customTheme} disableTransitionOnChange>
       <CssBaseline />
@@ -198,7 +203,7 @@ export default function Login() {
                   />
                 </FormControl>
                 <Typography level="body-xs" color="danger">
-                  {Error}
+                  {error}
                 </Typography>
                 <Stack sx={{ gap: 4, mt: 2 }}>
                   <Box

@@ -18,11 +18,13 @@ const Step1Form = ({
   handleInputChange,
   previewUrl,
   getInputProps,
+  errors,
 }: {
   formData: any;
   handleInputChange: any;
   previewUrl: string | null;
   getInputProps: () => { [key: string]: any };
+  errors: { [key: string]: string };
 }) => {
   return (
     <>
@@ -44,6 +46,8 @@ const Step1Form = ({
                 label="Nome"
                 variant="filled"
                 className="input"
+                error={!!errors["contato.nome"]}
+                helperText={errors["contato.nome"]}
               />
               Ex: João da Silva
             </label>
@@ -56,6 +60,8 @@ const Step1Form = ({
                 label="Email"
                 variant="filled"
                 className="input"
+                error={!!errors["contato.email"]}
+                helperText={errors["contato.email"]}
               />
               Ex: joao.silva@email.com
             </label>
@@ -75,6 +81,8 @@ const Step1Form = ({
               label="Cpf"
               variant="filled"
               className="input"
+              error={!!errors["contato.cpf"]}
+              helperText={errors["contato.cpf"]}
             />
             Ex: 123.456.789-00
           </label>
@@ -152,6 +160,8 @@ const Step1Form = ({
               label="Rua"
               variant="filled"
               className="input"
+              error={!!errors["contato.endereco.rua"]}
+              helperText={errors["contato.endereco.rua"]}
             />
             Ex: Rua das Flores
           </label>
@@ -166,6 +176,8 @@ const Step1Form = ({
               label="Número"
               variant="filled"
               className="input"
+              error={!!errors["contato.endereco.numero"]}
+              helperText={errors["contato.endereco.numero"]}
             />
             Ex: 123
           </label>
@@ -180,6 +192,8 @@ const Step1Form = ({
               label="Bairro"
               variant="filled"
               className="input"
+              error={!!errors["contato.endereco.bairro"]}
+              helperText={errors["contato.endereco.bairro"]}
             />
             Ex: Centro
           </label>
@@ -195,6 +209,8 @@ const Step1Form = ({
             label="Cidade"
             variant="filled"
             className="input"
+            error={!!errors["contato.endereco.cidade"]}
+            helperText={errors["contato.endereco.cidade"]}
           />
           Ex: São Paulo
         </label>
@@ -209,6 +225,8 @@ const Step1Form = ({
             label="Estado"
             variant="filled"
             className="input"
+            error={!!errors["contato.endereco.estado"]}
+            helperText={errors["contato.endereco.estado"]}
           />
           Ex: SP
         </label>
@@ -221,6 +239,8 @@ const Step1Form = ({
             label="CEP"
             variant="filled"
             className="input"
+            error={!!errors["contato.endereco.cep"]}
+            helperText={errors["contato.endereco.cep"]} //
           />
           Ex: 12345-678
         </label>
@@ -234,6 +254,8 @@ const Step1Form = ({
               label="Telefone"
               variant="filled"
               className="input"
+              error={!!errors["contato.telefone"]}
+              helperText={errors["contato.telefone"]}
             />
             Ex: (11) 91234-5678
           </label>
@@ -253,7 +275,7 @@ const Step1Form = ({
               variant="filled"
               className="input"
             />
-            Ex: 1990-01-01
+            Ex: 01/01/1990
           </label>
         </div>
       </div>

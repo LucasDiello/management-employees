@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import React from "react";
 
 const Step3Form = ({ formData }: { formData: any }) => {
@@ -17,11 +18,17 @@ const Step3Form = ({ formData }: { formData: any }) => {
         <p>Estado: {formData.contato.endereco.estado}</p>
         <p>CEP: {formData.contato.endereco.cep}</p>
         <p>Telefone: {formData.contato.telefone}</p>
-        <p>Data de Aniversário: {formData.contato.dataAniversario}</p>
+        <p>
+          Data de Aniversário:{" "}
+          {dayjs(formData.contato.dataAniversario).format("DD-MM-YYYY")}
+        </p>
         <h4>Informações do Funcionário</h4>
         <p>Status: {formData.funcionario.status}</p>
         <p>Cargo: {formData.funcionario.cargo}</p>
-        <p>Data de Admissão: {formData.funcionario.dataAdmissao}</p>
+        <p>
+          Data de Admissão:{" "}
+          {dayjs(formData.funcionario.dataAdmissao).format("DD-MM-YYYY")}
+        </p>
         <p>Setor: {formData.funcionario.setor}</p>
         <p>Salário: {formData.funcionario.salario}</p>
       </div>
