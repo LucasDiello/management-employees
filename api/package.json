@@ -7,7 +7,8 @@
     "start": "npm run shell",
     "dev": "nodemon index.js",
     "deploy": "firebase deploy --only functions",
-    "logs": "firebase functions:log"
+    "logs": "firebase functions:log",
+    "build": "vite build"
   },
   "type": "module",
   "engines": {
