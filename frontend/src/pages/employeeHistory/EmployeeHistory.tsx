@@ -10,6 +10,8 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import "./employeeHistory.css";
+import UpdateIcon from "@mui/icons-material/Update";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 const EmployeeHistory = () => {
   const { data, currentData } = useLoaderData() as {
@@ -39,7 +41,6 @@ const EmployeeHistory = () => {
     currentData.funcionario.setor,
     currentData.funcionario.salario,
   ];
-  console.log(data, currentData);
   return (
     <div className="employee-history layout">
       <Header />
@@ -62,7 +63,9 @@ const EmployeeHistory = () => {
           {/* Tabela de alterações com Material-UI */}
           {data.length ? (
             <>
-              <h3>Última Atualização</h3>
+              <h3>
+                Última Atualização <AccessTimeIcon />{" "}
+              </h3>
               <TableContainer component={Paper}>
                 <Table
                   sx={{ minWidth: 650 }}
@@ -131,7 +134,9 @@ const EmployeeHistory = () => {
           )}
         </div>
         <div>
-          <h3>Dados Atuais</h3>
+          <h3>
+            Dados Atuais <UpdateIcon />{" "}
+          </h3>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="tabela de dados atuais">
               <TableHead>
