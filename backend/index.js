@@ -8,13 +8,16 @@ dotenv.config();
 
 const permissions = JSON.parse(process.env.FIREBASE_PERMISSIONS);
 const serviceAccount = permissions;
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
-const app = express();
+console.log(permissions);
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+  });
+}
 export const db = admin.firestore();
-app.use(cors({ origin: true }));
+
+const app = express();
+app.use(cors({ origin: "http://localhost:3001", credentials: true }));
 app.use(express.json());
 
 //routes
