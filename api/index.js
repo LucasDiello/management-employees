@@ -6,19 +6,16 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const permissions = JSON.parse(process.env.FIREBASE_PERMISSIONS);
-const serviceAccount = permissions;
-console.log(permissions);
-if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-  });
-}
-export const db = admin.firestore();
-
 const app = express();
 app.use(cors({ origin: "*", credentials: true }));
 app.use(express.json());
+const permissions = JSON.parse(process.env.FIREBASE_PERMISSIONS);
+
+const serviceAccount = permissions;
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
+export const db = admin.firestore();
 
 //routes
 app.get("/hello", (req, res) => {
