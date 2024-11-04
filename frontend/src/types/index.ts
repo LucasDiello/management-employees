@@ -1,0 +1,36 @@
+interface Endereco {
+  rua: string;
+  numero: string;
+  bairro: string;
+  cidade: string;
+  estado: string;
+  cep: string;
+}
+
+interface Contato {
+  nome: string;
+  email: string;
+  sexo: string;
+  cpf: string;
+  rg: string;
+  endereco: Endereco;
+  telefone: string;
+  fotoPerfil: string;
+  dataAniversario: string;
+
+}
+
+interface Funcionario {
+  status: string;
+  cargo: string;
+  dataAdmissao: string;
+  setor: string;
+  salario: string;
+}
+
+export interface FormData {
+  contato: Contato;
+  funcionario: Funcionario;
+  dataAlteracao?: string;
+  id?: string;
+}

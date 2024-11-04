@@ -82,7 +82,7 @@
     height: 8px;
 }
 
-.form-step1 > h2, .form-step2 > h2 {
+h2 {
     font-size: 0.8rem;
     color: #333;
     padding: 0;
@@ -91,6 +91,13 @@
     align-items: center;
     gap: 10px;
     margin-right: 0.2rem;
+}
+
+.form-step2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+
 }
 
 .form-input-group1 {
@@ -251,7 +258,6 @@ label {
 input, select, .input {
     display: block;
     width: 100%;
-    border: 2px solid red;
     padding: 0.5rem ;
 }
 
