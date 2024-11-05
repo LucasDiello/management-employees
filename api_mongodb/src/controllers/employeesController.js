@@ -68,8 +68,6 @@ export const deleteEmployee = async (req, res) => {
     const { status, data } = await employeesServices.deleteEmployees(id);
     res.status(mapStatusHTTP(status)).json(data);
   } catch (error) {
-    res
-      .status(mapStatusHTTP("INTERNAL_SERVER_ERROR"))
-      .json({ error: error.message });
+    res.status(mapStatusHTTP("NOT_CONTENT")).json({ error: error.message });
   }
 };

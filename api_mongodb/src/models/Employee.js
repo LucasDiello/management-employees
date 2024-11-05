@@ -5,6 +5,8 @@ const EmployeeSchema = new mongoose.Schema({
     nome: String,
     email: String,
     sexo: String,
+    cpf: String,
+    rg: String,
     endereco: {
       rua: String,
       numero: String,
@@ -22,7 +24,7 @@ const EmployeeSchema = new mongoose.Schema({
     cargo: String,
     dataAdmissao: String,
     setor: String,
-    salario: Number,
+    salario: String,
   },
 });
 

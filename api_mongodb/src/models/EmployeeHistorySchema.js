@@ -6,6 +6,8 @@ const EmployeeHistorySchema = new mongoose.Schema({
     nome: String,
     email: String,
     sexo: String,
+    cpf: String,
+    rg: String,
     endereco: {
       rua: String,
       numero: String,

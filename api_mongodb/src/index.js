@@ -1,13 +1,13 @@
 import cors from "cors";
 import express from "express";
 import mongoose from "mongoose";
-import employeeRoutes from "./src/routes/employeesRoute.js";
+import employeeRoutes from "./routes/employeesRoute.js";
 import dotenv from "dotenv";
 
 dotenv.config();
 
 const app = express();
-app.use(cors({ origin: "*", credentials: true }));
+app.use(cors({ origin: "http://localhost:3001", credentials: true }));
 app.use(express.json());
 
 // Conectar ao MongoDB
