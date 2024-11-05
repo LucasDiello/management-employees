@@ -10,9 +10,11 @@ import { apiRequest } from "../../libs/apiRequest";
 
 function RowMenu({ row, onDelete }: { row: any; onDelete: () => void }) {
   const navigate = useNavigate();
+  console.log(row);
   const handleDelete = async () => {
     try {
       await apiRequest.delete(`/employees/${row.id}`);
+      onDelete();
     } catch (error) {
       console.error("Erro ao deletar o funcionário:", error);
     }

@@ -70,20 +70,21 @@ export default function OrderTable() {
   const navigate = useNavigate();
 
   const fetchEmployees = async () => {
+    setLoading(true);
     try {
-      const response = await apiRequest("/employees");
-      setData(response.data);
-      setLoading(false);
+      setTimeout(async () => {
+        const response = await apiRequest("/employees");
+        setData(response.data);
+        setLoading(false);
+      }, 1500);
     } catch (error) {
       console.error(error);
-    } finally {
-      setLoading(false);
     }
   };
 
   useEffect(() => {
     fetchEmployees();
-  }, [data]);
+  }, []);
 
   const renderFilters = () => (
     <React.Fragment>
@@ -142,10 +143,6 @@ export default function OrderTable() {
 
   // Gere um array com os números de página
   const pages = Array.from({ length: totalPages }, (_, index) => index + 1);
-
-  if (loading) {
-    return <Loading />;
-  }
 
   return (
     <React.Fragment>
@@ -287,81 +284,95 @@ export default function OrderTable() {
               <th style={{ width: 140, padding: "12px 6px" }}> </th>
             </tr>
           </thead>
-          <tbody>
-            {[...currentItems].sort(getComparator(order, "id")).map((row) => (
-              <tr key={row.id}>
-                <td style={{ textAlign: "center", width: 120 }}>
-                  <Checkbox
-                    size="sm"
-                    checked={selected.includes(row.id)}
-                    color={selected.includes(row.id) ? "primary" : undefined}
-                    onChange={(event) => {
-                      setSelected((ids) =>
-                        event.target.checked
-                          ? ids.concat(row.id)
-                          : ids.filter((itemId) => itemId !== row.id)
-                      );
-                    }}
-                    slotProps={{ checkbox: { sx: { textAlign: "left" } } }}
-                    sx={{ verticalAlign: "text-bottom" }}
-                  />
-                </td>
-                <td>
-                  <Typography level="body-xs">{row.id}</Typography>
-                </td>
-                <td>
-                  <Typography level="body-xs">
-                    {dayjs(row.funcionario.dataAdmissao).format("DD-MM-YYYY")}
-                  </Typography>
-                </td>
-                <td>
-                  <Chip
-                    variant="soft"
-                    size="sm"
-                    startDecorator={
-                      statusToDecorator[row.funcionario.status as Status]
-                    }
-                    color={statusToColor[row.funcionario.status as Status]}
-                  >
-                    {row.funcionario.status}
-                  </Chip>
-                </td>
-                <td>
-                  <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-                    <Avatar size="sm">
-                      {row.contato.nome.charAt(0).toUpperCase()}
-                    </Avatar>
-                    <div>
-                      <Typography level="body-xs">
-                        {row.contato.nome}
-                      </Typography>
-                      <Typography level="body-xs">
-                        {row.contato.email}
-                      </Typography>
-                    </div>
-                  </Box>
-                </td>
-                <td>
-                  <Typography level="body-xs">
-                    {row.funcionario.cargo}
-                  </Typography>
-                </td>
-                <td>
-                  <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-                    <ButtonBase
-                      level="body-xs"
-                      component="button"
-                      onClick={() => handleDownloadPDF(row)}
-                      sx={{ color: "blue" }}
-                    >
-                      Download
-                    </ButtonBase>
-                    <RowMenu row={row} />
-                  </Box>
+          {loading ? (
+            <tbody>
+              <tr>
+                <td colSpan={7} style={{ textAlign: "center" }}>
+                  <CircularProgress size={24} />
                 </td>
               </tr>
-            ))}
-          </tbody>
+            </tbody>
+          ) : (
+            <tbody>
+              {[...currentItems].sort(getComparator(order, "id")).map((row) => (
+                <tr key={row.id}>
+                  <td style={{ textAlign: "center", width: 120 }}>
+                    <Checkbox
+                      size="sm"
+                      checked={selected.includes(row.id)}
+                      color={selected.includes(row.id) ? "primary" : undefined}
+                      onChange={(event) => {
+                        setSelected((ids) =>
+                          event.target.checked
+                            ? ids.concat(row.id)
+                            : ids.filter((itemId) => itemId !== row.id)
+                        );
+                      }}
+                      slotProps={{ checkbox: { sx: { textAlign: "left" } } }}
+                      sx={{ verticalAlign: "text-bottom" }}
+                    />
+                  </td>
+                  <td>
+                    <Typography level="body-xs">
+                      {row.id.length > 10
+                        ? row.id.substring(0, 16) + "..."
+                        : row.id}
+                    </Typography>
+                  </td>
+                  <td>
+                    <Typography level="body-xs">
+                      {dayjs(row.funcionario.dataAdmissao).format("DD-MM-YYYY")}
+                    </Typography>
+                  </td>
+                  <td>
+                    <Chip
+                      variant="soft"
+                      size="sm"
+                      startDecorator={
+                        statusToDecorator[row.funcionario.status as Status]
+                      }
+                      color={statusToColor[row.funcionario.status as Status]}
+                    >
+                      {row.funcionario.status}
+                    </Chip>
+                  </td>
+                  <td>
+                    <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
+                      <Avatar size="sm">
+                        {row.contato.nome.charAt(0).toUpperCase()}
+                      </Avatar>
+                      <div>
+                        <Typography level="body-xs">
+                          {row.contato.nome}
+                        </Typography>
+                        <Typography level="body-xs">
+                          {row.contato.email}
+                        </Typography>
+                      </div>
+                    </Box>
+                  </td>
+                  <td>
+                    <Typography level="body-xs">
+                      {row.funcionario.cargo}
+                    </Typography>
+                  </td>
+                  <td>
+                    <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
+                      <ButtonBase
+                        level="body-xs"
+                        component="button"
+                        onClick={() => handleDownloadPDF(row)}
+                        sx={{ color: "blue" }}
+                      >
+                        Download
+                      </ButtonBase>
+                      <RowMenu row={row} onDelete={fetchEmployees} />
+                    </Box>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          )}
         </Table>
       </Sheet>
       {currentItems.length === 0 && (

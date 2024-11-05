@@ -7,7 +7,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
-app.use(cors({ origin: "*", credentials: true }));
+app.use(cors({ origin: "http://localhost:3001", credentials: true }));
 app.use(express.json());
 const permissions = JSON.parse(process.env.FIREBASE_PERMISSIONS);
 

@@ -41,7 +41,6 @@ export const updateEmployee = async (req, res) => {
   }
 };
 
-// Controlador para obter o histórico de um funcionário específico
 export const getEmployeeHistory = async (req, res) => {
   try {
     const { id } = req.params;

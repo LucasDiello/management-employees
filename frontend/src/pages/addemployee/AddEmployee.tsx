@@ -30,7 +30,6 @@ const AddEmployee = () => {
     currentStep,
     setCurrentStep,
     formData,
-    loading,
     handleInputChange,
     handleSubmit,
     idEmployee,
@@ -42,17 +41,12 @@ const AddEmployee = () => {
 
   useEffect(() => {
     if (idEmployee) {
-      console.log("idEmployee", idEmployee);
       navigate(`/employees`);
     }
   }, [idEmployee]);
 
   const loadingWidth =
     currentStep === 0 ? "33%" : currentStep === 1 ? "66%" : "100%";
-
-  if (loading) {
-    return <h1>Carregando...</h1>;
-  }
 
   return (
     <div>

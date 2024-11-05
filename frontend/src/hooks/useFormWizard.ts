@@ -88,6 +88,7 @@ export const useFormWizard = (initialData : FormData | null = null) => {
           console.log(initialData)
           console.log("updatedEmployee", formData)
           await apiRequest.put(`/employees/${initialData.id}`, formData);
+          
           gerarPDF(formData);
         } else {
           // Criar

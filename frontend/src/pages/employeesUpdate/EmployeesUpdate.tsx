@@ -12,13 +12,14 @@ import Step3Form from "../addemployee/Step3Form";
 import useFileUpload from "../../hooks/useFileUpload";
 import { storage } from "../../libs/firebaseConfig";
 import { getDownloadURL, ref } from "firebase/storage";
+import profileDefault from "../addemployee/userDefault.jpg";
 
 const UpdateEmployee = () => {
   const data = useLoaderData() as FormData;
   const [previewUrlUpdated, setPreviewUrlUpdated] = useState<string | null>(
     null
   );
-  console.log(data);
+  console.log(JSON.parse(JSON.stringify(data)));
   const {
     steps,
     stepsText,
@@ -41,7 +42,7 @@ const UpdateEmployee = () => {
       })
       .catch((error) => {
         console.error("Erro ao obter URL da imagem:", error);
-        setPreviewUrlUpdated("url-da-imagem-placeholder");
+        setPreviewUrlUpdated(profileDefault);
       });
   }, []);
 
@@ -50,7 +51,7 @@ const UpdateEmployee = () => {
   if (loading) {
     return <h1>Carregando...</h1>;
   }
-  console.log(previewUrlUpdated, "previewUrl");
+
   return (
     <div>
       <header className="header-form-employees">
