@@ -92,7 +92,7 @@ const UpdateEmployee = () => {
         <form
           onSubmit={(e) => {
             handleSubmit(e);
-            navigate("/employees");
+            navigate("/");
           }}
         >
           {currentStep === 0 && (

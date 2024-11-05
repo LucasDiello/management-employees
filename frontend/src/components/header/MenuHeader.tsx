@@ -28,7 +28,6 @@ export default function MenuHeader() {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
   };
-  console.log(currentUser);
   return (
     <div>
       <IconButton
@@ -61,7 +60,7 @@ export default function MenuHeader() {
         <MenuItem
           onClick={() => {
             handleClose();
-            navigate("/employees");
+            navigate("/");
           }}
         >
           Funcionários

@@ -41,7 +41,7 @@ const AddEmployee = () => {
 
   useEffect(() => {
     if (idEmployee) {
-      navigate(`/employees`);
+      navigate(`/`);
     }
   }, [idEmployee]);
 

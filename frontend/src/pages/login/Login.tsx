@@ -74,7 +74,7 @@ export default function Login() {
       updateUser(auth.currentUser);
       localStorage.setItem("token", token);
 
-      navigate("/employees");
+      navigate("/");
     }
 
     if (!auth.currentUser) {

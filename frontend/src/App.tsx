@@ -17,7 +17,7 @@ function App() {
       element: <Layout />,
       children: [
         {
-          path: "/employees",
+          path: "/",
           element: <Employees />,
         },
       ],
