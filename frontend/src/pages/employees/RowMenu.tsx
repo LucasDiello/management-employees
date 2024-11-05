@@ -7,12 +7,17 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded";
 import { apiRequest } from "../../libs/apiRequest";
+import { useAuth } from "../../context/authContext";
 
 function RowMenu({ row, onDelete }: { row: any; onDelete: () => void }) {
   const navigate = useNavigate();
-  console.log(row);
+  const { currentUser } = useAuth();
   const handleDelete = async () => {
     try {
+      if (!currentUser) {
+        navigate("/login");
+        return;
+      }
       await apiRequest.delete(`/employees/${row.id}`);
       onDelete();
     } catch (error) {
