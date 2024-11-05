@@ -123,9 +123,7 @@ export default function OrderTable() {
 
   const handleDownloadPDF = async (formData: FormData) => {
     try {
-      // Cria uma referência para a pasta onde os PDFs estão armazenados
-      console.log(formData);
-      gerarPDF(formData, true);
+      gerarPDF(formData, true, formData.id);
     } catch (error) {
       console.error(error);
     }

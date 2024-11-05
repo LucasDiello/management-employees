@@ -3,10 +3,9 @@ import { useDropzone } from "react-dropzone";
 import { ref, uploadBytesResumable } from "firebase/storage";
 
 const useFileUpload = (storage: any, id: string) => {
-  console.log("entrei no useFileUpload", id);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
-  const [isUploading, setIsUploading] = useState(false); // Novo estado para controlar o upload
+  const [isUploading, setIsUploading] = useState(false);
 
   const onDrop = (acceptedFiles: File[]) => {
     const selectedFile = acceptedFiles[0];
@@ -23,7 +22,7 @@ const useFileUpload = (storage: any, id: string) => {
   });
 
   useEffect(() => {
-    if (!file || !id || isUploading) return; // Garante que o id está correto e evita uploads duplicados
+    if (!file || !id || isUploading) return; 
 
     const handleUpload = async () => {
       console.log("entrei no try");
@@ -40,7 +39,7 @@ const useFileUpload = (storage: any, id: string) => {
     };
 
     handleUpload();
-  }, [id, file, storage]); // Executa o upload apenas quando o id e o arquivo estão corretos
+  }, [id, file, storage]);
 
   return { previewUrl, getInputProps, isDragActive, setPreviewUrl };
 };

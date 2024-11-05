@@ -6,8 +6,6 @@ import gerarPDF from "../temp/gerarPDF";
 import { apiRequest } from "../libs/apiRequest";
 import { formDataSchema } from "../schema/formDataSchema";
 import { z } from "zod";
-import { format } from "date-fns";
-import dayjs from "dayjs";
 
 export const useFormWizard = (initialData : FormData | null = null) => {
     
@@ -84,17 +82,13 @@ export const useFormWizard = (initialData : FormData | null = null) => {
       try {
           formDataSchema.parse(formData);
         if (initialData) {
-          // Atualizar
-          console.log(initialData)
-          console.log("updatedEmployee", formData)
-          await apiRequest.put(`/employees/${initialData.id}`, formData);
+          const { data } = await apiRequest.put(`/employees/${initialData.id}`, formData);
           
-          gerarPDF(formData);
+          gerarPDF(formData, false, data.id);
         } else {
-          // Criar
           const {data} = await apiRequest.post("/employees", formData);
          setIdEmployee(data.id);
-         gerarPDF(formData);
+         gerarPDF(formData, false, data.id);
         }
       } catch (error) {
         if (error instanceof z.ZodError) {
@@ -102,7 +96,7 @@ export const useFormWizard = (initialData : FormData | null = null) => {
             error.errors.forEach((err) => {
               formattedErrors[err.path.join('.')] = err.message;
             });
-            setErrors(formattedErrors); // Armazenar os erros no estado
+            setErrors(formattedErrors); 
           }
         console.error(error);
       }

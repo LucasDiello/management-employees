@@ -6,8 +6,8 @@ import { FormData } from "../types";
 
 pdfMake.vfs = vfsFonts.pdfMake.vfs;
 
-const gerarPDF = async (formData : FormData, saved = false ) => {
-  const docDefinition: any = {
+const gerarPDF = async (formData : FormData, saved = false, id : string ) => {
+  const docDefinition: any = {  
     content: [
       {
         text: `Formulário Funcionário:`,
@@ -80,7 +80,7 @@ const gerarPDF = async (formData : FormData, saved = false ) => {
         bold: true,
       },
       nomeFuncionario: {
-        fontSize: 10, // Tamanho da fonte menor para o nome do funcionário
+        fontSize: 10, 
         margin: [0, 0, 0, 10],
       },
       subheader: {
@@ -97,13 +97,12 @@ const gerarPDF = async (formData : FormData, saved = false ) => {
     },
     defaultStyle: {
       fontSize: 12,
-      color: "#333333", // Cor de texto
-      lineHeight: 1.5, // Altura da linha
+      color: "#333333", 
+      lineHeight: 1.5, 
     },
   };
   try {
 
-      // Gera o PDF como Blob
       const pdfBlob = await new Promise<Blob>((resolve) => {
           pdfMake.createPdf(docDefinition).getBlob((blob) => {
               resolve(blob);
@@ -121,13 +120,11 @@ const gerarPDF = async (formData : FormData, saved = false ) => {
         .toString()
         .padStart(2, "0")}`;
         
-        // Define o nome do próximo arquivo com base no número sequencial
         const fileName = `formulario_${formattedDate}.pdf`;
-        
-        // Define o caminho do arquivo
+        console.log("id in gerarPDF", id)
         const storageRef = ref(
             storage,
-            `pdfs/${formData.contato.nome}/${fileName}`
+            `pdfs/${id}/${fileName}`
         );
         
         if (saved) {
@@ -135,7 +132,6 @@ const gerarPDF = async (formData : FormData, saved = false ) => {
           pdfMake.createPdf(docDefinition).download("relatorio.pdf");
         }
 
-        // Faz o upload do arquivo  
         uploadBytesResumable(storageRef, pdfBlob);
         
     } catch (error) {
