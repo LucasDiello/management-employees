@@ -40,11 +40,11 @@ import RowMenu from "./RowMenu";
 import { ButtonBase, CircularProgress } from "@mui/material";
 import { getDownloadURL, listAll, ref } from "firebase/storage";
 import { storage } from "../../libs/firebaseConfig";
-import { FormData } from "../../types";
 import gerarPDF from "../../temp/gerarPDF";
 import Loading from "../../components/loading/Loading";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
+import { FormData } from "../../types";
 
 type Status = "Contratado" | "Refunded" | "Demitido";
 
@@ -66,6 +66,10 @@ export default function OrderTable() {
   const [data, setData] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [search, setSearch] = useState<string>("");
+  const [status, setStatus] = useState<string>("");
+  const [selectedEmployee, setSelectedEmployee] = useState<string>("todos");
+
   const itemsPerPage = 8;
   const navigate = useNavigate();
 
@@ -94,17 +98,27 @@ export default function OrderTable() {
           size="sm"
           placeholder="Filtrar por status"
           slotProps={{ button: { sx: { whiteSpace: "nowrap" } } }}
+          onChange={(e, values) => {
+            setStatus(values);
+          }}
         >
+          <Option value="">Todos</Option>
           <Option value="Contratado">Contratado</Option>
-          <Option value="cancelled">Demitido</Option>
+          <Option value="Demitido">Demitido</Option>
           <Option value="Análise">Análise</Option>
         </Select>
       </FormControl>
-      <FormControl size="sm">
+      <FormControl size="sm" onChange={(e) => console.log(e.target.value)}>
         <FormLabel>Funcionários</FormLabel>
-        <Select size="sm" placeholder="todos">
+        <Select
+          size="sm"
+          placeholder="todos"
+          onChange={(e, values) => {
+            setSelectedEmployee(values);
+          }}
+        >
           <Option value="todos">Todos</Option>
-          {data.map((row: any) => (
+          {data.map((row: FormData) => (
             <Option key={row.id} value={row.contato.nome}>
               {row.contato.nome}
             </Option>
@@ -129,55 +143,34 @@ export default function OrderTable() {
     }
   };
 
-  // Calcular os itens que devem ser exibidos na tabela
+  // Filtrar os itens
+  const filteredItems = data
+    .filter((row) => {
+      const searchValue = search.toLowerCase();
+      return row.contato.nome.toLowerCase().includes(searchValue);
+    })
+    .filter((row) => {
+      if (status === "") return true;
+      return row.funcionario.status === status;
+    })
+    .filter((row) => {
+      if (selectedEmployee === "todos") return true;
+      return row.contato.nome === selectedEmployee;
+    });
+
+  // Calcular os itens que devem ser exibidos na página atual
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentItems = (data || []).slice(
+  const currentItems = filteredItems.slice(
     startIndex,
     startIndex + itemsPerPage
   );
 
-  // Calcule o total de páginas
+  // Calcular o total de páginas
   const totalPages = Math.ceil(data.length / itemsPerPage);
-
-  // Gere um array com os números de página
   const pages = Array.from({ length: totalPages }, (_, index) => index + 1);
 
   return (
     <React.Fragment>
-      <Sheet
-        className="SearchAndFilters-mobile"
-        sx={{ display: { xs: "flex", sm: "none" }, my: 1, gap: 1 }}
-      >
-        <Input
-          size="sm"
-          placeholder="Buscar"
-          startDecorator={<SearchIcon />}
-          sx={{ flexGrow: 1 }}
-        />
-        <IconButton
-          size="sm"
-          variant="outlined"
-          color="neutral"
-          onClick={() => setOpen(true)}
-        >
-          <FilterAltIcon />
-        </IconButton>
-        <Modal open={open} onClose={() => setOpen(false)}>
-          <ModalDialog aria-labelledby="filter-modal" layout="fullscreen">
-            <ModalClose />
-            <Typography id="filter-modal" level="h2">
-              Filters
-            </Typography>
-            <Divider sx={{ my: 2 }} />
-            <Sheet sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-              {renderFilters()}
-              <Button color="primary" onClick={() => setOpen(false)}>
-                Submit
-              </Button>
-            </Sheet>
-          </ModalDialog>
-        </Modal>
-      </Sheet>
       <Box
         className="SearchAndFilters-tabletUp"
         sx={{
@@ -197,6 +190,7 @@ export default function OrderTable() {
             size="sm"
             placeholder="Buscar"
             startDecorator={<SearchIcon />}
+            onChange={(e) => setSearch(e.target.value)}
           />
         </FormControl>
         {renderFilters()}
@@ -240,7 +234,9 @@ export default function OrderTable() {
                   checked={selected.length === data.length}
                   onChange={(event) => {
                     setSelected(
-                      event.target.checked ? data.map((row: any) => row.id) : []
+                      event.target.checked
+                        ? data.map((row: FormData) => row.id)
+                        : []
                     );
                   }}
                   color={
@@ -292,83 +288,93 @@ export default function OrderTable() {
             </tbody>
           ) : (
             <tbody>
-              {[...currentItems].sort(getComparator(order, "id")).map((row) => (
-                <tr key={row.id}>
-                  <td style={{ textAlign: "center", width: 120 }}>
-                    <Checkbox
-                      size="sm"
-                      checked={selected.includes(row.id)}
-                      color={selected.includes(row.id) ? "primary" : undefined}
-                      onChange={(event) => {
-                        setSelected((ids) =>
-                          event.target.checked
-                            ? ids.concat(row.id)
-                            : ids.filter((itemId) => itemId !== row.id)
-                        );
-                      }}
-                      slotProps={{ checkbox: { sx: { textAlign: "left" } } }}
-                      sx={{ verticalAlign: "text-bottom" }}
-                    />
-                  </td>
-                  <td>
-                    <Typography level="body-xs">
-                      {row.id.length > 10
-                        ? row.id.substring(0, 16) + "..."
-                        : row.id}
-                    </Typography>
-                  </td>
-                  <td>
-                    <Typography level="body-xs">
-                      {dayjs(row.funcionario.dataAdmissao).format("DD-MM-YYYY")}
-                    </Typography>
-                  </td>
-                  <td>
-                    <Chip
-                      variant="soft"
-                      size="sm"
-                      startDecorator={
-                        statusToDecorator[row.funcionario.status as Status]
-                      }
-                      color={statusToColor[row.funcionario.status as Status]}
-                    >
-                      {row.funcionario.status}
-                    </Chip>
-                  </td>
-                  <td>
-                    <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-                      <Avatar size="sm">
-                        {row.contato.nome.charAt(0).toUpperCase()}
-                      </Avatar>
-                      <div>
-                        <Typography level="body-xs">
-                          {row.contato.nome}
-                        </Typography>
-                        <Typography level="body-xs">
-                          {row.contato.email}
-                        </Typography>
-                      </div>
-                    </Box>
-                  </td>
-                  <td>
-                    <Typography level="body-xs">
-                      {row.funcionario.cargo}
-                    </Typography>
-                  </td>
-                  <td>
-                    <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-                      <ButtonBase
-                        level="body-xs"
-                        component="button"
-                        onClick={() => handleDownloadPDF(row)}
-                        sx={{ color: "blue" }}
+              {[...filteredItems]
+                .sort(getComparator(order, "id"))
+                .map((row: FormData) => (
+                  <tr key={row.id}>
+                    <td style={{ textAlign: "center", width: 120 }}>
+                      <Checkbox
+                        size="sm"
+                        checked={selected.includes(row.id)}
+                        color={
+                          selected.includes(row.id) ? "primary" : undefined
+                        }
+                        onChange={(event) => {
+                          setSelected((ids) =>
+                            event.target.checked
+                              ? ids.concat(row.id)
+                              : ids.filter((itemId) => itemId !== row.id)
+                          );
+                        }}
+                        slotProps={{ checkbox: { sx: { textAlign: "left" } } }}
+                        sx={{ verticalAlign: "text-bottom" }}
+                      />
+                    </td>
+                    <td>
+                      <Typography level="body-xs">
+                        {row.id.length > 10
+                          ? row.id.substring(0, 16) + "..."
+                          : row.id}
+                      </Typography>
+                    </td>
+                    <td>
+                      <Typography level="body-xs">
+                        {dayjs(row.funcionario.dataAdmissao).format(
+                          "DD-MM-YYYY"
+                        )}
+                      </Typography>
+                    </td>
+                    <td>
+                      <Chip
+                        variant="soft"
+                        size="sm"
+                        startDecorator={
+                          statusToDecorator[row.funcionario.status as Status]
+                        }
+                        color={statusToColor[row.funcionario.status as Status]}
                       >
-                        Download
-                      </ButtonBase>
-                      <RowMenu row={row} onDelete={fetchEmployees} />
-                    </Box>
-                  </td>
-                </tr>
-              ))}
+                        {row.funcionario.status}
+                      </Chip>
+                    </td>
+                    <td>
+                      <Box
+                        sx={{ display: "flex", gap: 2, alignItems: "center" }}
+                      >
+                        <Avatar size="sm">
+                          {row.contato.nome.charAt(0).toUpperCase()}
+                        </Avatar>
+                        <div>
+                          <Typography level="body-xs">
+                            {row.contato.nome}
+                          </Typography>
+                          <Typography level="body-xs">
+                            {row.contato.email}
+                          </Typography>
+                        </div>
+                      </Box>
+                    </td>
+                    <td>
+                      <Typography level="body-xs">
+                        {row.funcionario.cargo}
+                      </Typography>
+                    </td>
+                    <td>
+                      <Box
+                        sx={{ display: "flex", gap: 2, alignItems: "center" }}
+                      >
+                        <ButtonBase
+                          level="body-xs"
+                          component="button"
+                          onClick={() => handleDownloadPDF(row)}
+                          sx={{ color: "blue" }}
+                        >
+                          Download
+                        </ButtonBase>
+                        <RowMenu row={row} onDelete={fetchEmployees} />
+                      </Box>
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           )}
         </Table>
