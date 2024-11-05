@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import Header from "../../components/header/Header";
+import Header from "../header/Header";
 import { Outlet, useNavigate } from "react-router-dom";
 import "./layout.scss";
 import { useAuth } from "../../context/authContext";

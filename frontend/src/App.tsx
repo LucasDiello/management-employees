@@ -2,7 +2,7 @@ import React from "react";
 import "./App.scss";
 import Login from "./pages/login/Login";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Layout, RequireAuth } from "./pages/layout/Layout";
+import { Layout, RequireAuth } from "./components/layout/Layout";
 import Employees from "./pages/employees/Employees";
 import Register from "./pages/register/Register";
 import EmployeesUpdate from "./pages/employeesUpdate/EmployeesUpdate";
