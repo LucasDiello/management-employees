@@ -5,9 +5,10 @@ import employeeRoutes from "./routes/employeesRoute.js";
 import dotenv from "dotenv";
 
 dotenv.config();
-
+const url = process.env.URL_FRONTEND;
+console.log(url);
 const app = express();
-app.use(cors({ origin: "http://localhost:3001", credentials: true }));
+app.use(cors({ origin: url, credentials: true }));
 app.use(express.json());
 
 // Conectar ao MongoDB
