@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./addemployee.css";
 import {
   FormControl,
@@ -7,11 +7,15 @@ import {
   RadioGroup,
   TextField,
   FormControlLabel,
+  Select,
+  MenuItem,
+  SelectChangeEvent,
+  InputLabel,
+  FormHelperText,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import { storage } from "../../libs/firebaseConfig";
-import useFileUpload from "../../hooks/useFileUpload";
 import ProfileImageUpload from "./ProfileImageUpload";
+import axios from "axios";
 
 const Step1Form = ({
   formData,
@@ -26,6 +30,35 @@ const Step1Form = ({
   getInputProps: () => { [key: string]: any };
   errors: { [key: string]: string };
 }) => {
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [estadoSelecionado, setEstadoSelecionado] = useState("");
+
+  useEffect(() => {
+    axios
+      .get("https://servicodados.ibge.gov.br/api/v1/localidades/estados")
+      .then((response) => {
+        setStates(response.data);
+      })
+      .catch((error) => {
+        console.error("Erro ao carregar estados:", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (estadoSelecionado) {
+      axios
+        .get(
+          `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${estadoSelecionado}/municipios`
+        )
+        .then((response) => {
+          setCities(response.data);
+        })
+        .catch((error) => {
+          console.error("Erro ao carregar cidades:", error);
+        });
+    }
+  }, [estadoSelecionado]);
   return (
     <>
       <h2>
@@ -135,7 +168,7 @@ const Step1Form = ({
                   }}
                 />
                 <FormControlLabel
-                  value="outros"
+                  value="Outros"
                   control={<Radio sx={{ transform: "scale(0.8)" }} />}
                   label="Outros"
                   sx={{
@@ -198,38 +231,73 @@ const Step1Form = ({
             Ex: Centro
           </label>
         </div>
-        <label>
-          <TextField
+        <FormControl
+          variant="filled"
+          sx={{
+            display: "block",
+            marginBottom: "0.3rem",
+          }}
+          error={!!errors["contato.endereco.estado"]}
+        >
+          <InputLabel id="demo-simple-select-filled-label">Estado</InputLabel>
+          <Select
+            labelId="demo-simple-select-filled-label"
+            id="demo-simple-select-filled"
+            value={estadoSelecionado}
+            onChange={(e: SelectChangeEvent) => {
+              setEstadoSelecionado(e.target.value);
+              handleInputChange(e, "contato", "endereco", "estado");
+            }}
+            sx={{
+              display: "block",
+            }}
+          >
+            <MenuItem value="">
+              <em>Estado</em>
+            </MenuItem>
+            {states.map((state: any) => (
+              <MenuItem key={state.id} value={state.sigla}>
+                {state.nome}
+              </MenuItem>
+            ))}
+          </Select>
+          {errors["contato.endereco.estado"] && (
+            <FormHelperText>{errors["contato.endereco.estado"]}</FormHelperText>
+          )}
+        </FormControl>
+        <FormControl
+          variant="filled"
+          sx={{
+            display: "block",
+            marginBottom: "0.3rem",
+          }}
+          error={!!errors["contato.endereco.cidade"]}
+        >
+          <InputLabel id="demo-simple-select-filled-label">Cidade</InputLabel>
+          <Select
+            labelId="demo-simple-select-filled-label"
+            id="demo-simple-select-filled"
             value={formData.contato.endereco.cidade}
-            onChange={(e) =>
+            onChange={(e: SelectChangeEvent) =>
               handleInputChange(e, "contato", "endereco", "cidade")
             }
-            sx={{ marginBottom: "0.3rem" }}
-            id="filled-basic"
-            label="Cidade"
-            variant="filled"
-            className="input"
-            error={!!errors["contato.endereco.cidade"]}
-            helperText={errors["contato.endereco.cidade"]}
-          />
-          Ex: São Paulo
-        </label>
-        <label>
-          <TextField
-            value={formData.contato.endereco.estado}
-            onChange={(e) =>
-              handleInputChange(e, "contato", "endereco", "estado")
-            }
-            sx={{ marginBottom: "0.3rem" }}
-            id="filled-basic"
-            label="Estado"
-            variant="filled"
-            className="input"
-            error={!!errors["contato.endereco.estado"]}
-            helperText={errors["contato.endereco.estado"]}
-          />
-          Ex: SP
-        </label>
+            sx={{
+              display: "block",
+            }}
+          >
+            <MenuItem value="">
+              <em>Cidade</em>
+            </MenuItem>
+            {cities.map((city: any) => (
+              <MenuItem key={city.id} value={city.nome}>
+                {city.nome}
+              </MenuItem>
+            ))}
+          </Select>
+          {errors["contato.endereco.cidade"] && (
+            <FormHelperText>{errors["contato.endereco.cidade"]}</FormHelperText>
+          )}
+        </FormControl>
         <label>
           <TextField
             value={formData.contato.endereco.cep}

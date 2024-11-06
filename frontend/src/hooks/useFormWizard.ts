@@ -80,11 +80,11 @@ export const useFormWizard = (initialData : FormData | null = null) => {
       e.preventDefault();
       setLoading(true);
       try {
-          formDataSchema.parse(formData);
+        formDataSchema.parse(formData);
         if (initialData) {
           const { data } = await apiRequest.put(`/employees/${initialData.id}`, formData);
-          
           gerarPDF(formData, false, data.id);
+          
         } else {
           const {data} = await apiRequest.post("/employees", formData);
          setIdEmployee(data.id);
