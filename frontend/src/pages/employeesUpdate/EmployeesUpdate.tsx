@@ -19,7 +19,6 @@ const UpdateEmployee = () => {
   const [previewUrlUpdated, setPreviewUrlUpdated] = useState<string | null>(
     null
   );
-  console.log(JSON.parse(JSON.stringify(data)));
   const {
     steps,
     stepsText,
@@ -51,7 +50,6 @@ const UpdateEmployee = () => {
   if (loading) {
     return <h1>Carregando...</h1>;
   }
-
   return (
     <div>
       <header className="header-form-employees">

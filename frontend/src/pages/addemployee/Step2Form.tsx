@@ -106,6 +106,7 @@ const Step2Form = ({
             label="Data de Admissão"
             variant="filled"
             className="input"
+            error={!!errors["funcionario.dataAdmissao"]}
           />
           Ex: 01/01/2021
         </label>

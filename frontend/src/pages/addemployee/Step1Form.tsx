@@ -32,7 +32,9 @@ const Step1Form = ({
 }) => {
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
-  const [estadoSelecionado, setEstadoSelecionado] = useState("");
+  const [estadoSelecionado, setEstadoSelecionado] = useState(
+    formData.contato.endereco.estado || ""
+  );
 
   useEffect(() => {
     axios
@@ -243,7 +245,7 @@ const Step1Form = ({
           <Select
             labelId="demo-simple-select-filled-label"
             id="demo-simple-select-filled"
-            value={estadoSelecionado}
+            value={formData.contato.endereco.estado}
             onChange={(e: SelectChangeEvent) => {
               setEstadoSelecionado(e.target.value);
               handleInputChange(e, "contato", "endereco", "estado");
@@ -308,7 +310,7 @@ const Step1Form = ({
             variant="filled"
             className="input"
             error={!!errors["contato.endereco.cep"]}
-            helperText={errors["contato.endereco.cep"]} //
+            helperText={errors["contato.endereco.cep"]}
           />
           Ex: 12345-678
         </label>
@@ -342,6 +344,7 @@ const Step1Form = ({
               label="Data de Aniversário"
               variant="filled"
               className="input"
+              error={!!errors["contato.dataAniversario"]}
             />
             Ex: 01/01/1990
           </label>
