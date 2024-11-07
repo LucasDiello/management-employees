@@ -233,73 +233,83 @@ const Step1Form = ({
             Ex: Centro
           </label>
         </div>
-        <FormControl
-          variant="filled"
-          sx={{
-            display: "block",
-            marginBottom: "0.3rem",
-          }}
-          error={!!errors["contato.endereco.estado"]}
-        >
-          <InputLabel id="demo-simple-select-filled-label">Estado</InputLabel>
-          <Select
-            labelId="demo-simple-select-filled-label"
-            id="demo-simple-select-filled"
-            value={formData.contato.endereco.estado}
-            onChange={(e: SelectChangeEvent) => {
-              setEstadoSelecionado(e.target.value);
-              handleInputChange(e, "contato", "endereco", "estado");
-            }}
+        <label>
+          <FormControl
+            variant="filled"
             sx={{
               display: "block",
+              marginBottom: "0.3rem",
             }}
+            error={!!errors["contato.endereco.estado"]}
           >
-            <MenuItem value="">
-              <em>Estado</em>
-            </MenuItem>
-            {states.map((state: any) => (
-              <MenuItem key={state.id} value={state.sigla}>
-                {state.nome}
+            <InputLabel id="demo-simple-select-filled-label">Estado</InputLabel>
+            <Select
+              labelId="demo-simple-select-filled-label"
+              id="demo-simple-select-filled"
+              value={formData.contato.endereco.estado}
+              onChange={(e: SelectChangeEvent) => {
+                setEstadoSelecionado(e.target.value);
+                handleInputChange(e, "contato", "endereco", "estado");
+              }}
+              sx={{
+                display: "block",
+              }}
+            >
+              <MenuItem value="">
+                <em>Estado</em>
               </MenuItem>
-            ))}
-          </Select>
-          {errors["contato.endereco.estado"] && (
-            <FormHelperText>{errors["contato.endereco.estado"]}</FormHelperText>
-          )}
-        </FormControl>
-        <FormControl
-          variant="filled"
-          sx={{
-            display: "block",
-            marginBottom: "0.3rem",
-          }}
-          error={!!errors["contato.endereco.cidade"]}
-        >
-          <InputLabel id="demo-simple-select-filled-label">Cidade</InputLabel>
-          <Select
-            labelId="demo-simple-select-filled-label"
-            id="demo-simple-select-filled"
-            value={formData.contato.endereco.cidade}
-            onChange={(e: SelectChangeEvent) =>
-              handleInputChange(e, "contato", "endereco", "cidade")
-            }
+              {states.map((state: any) => (
+                <MenuItem key={state.id} value={state.sigla}>
+                  {state.nome}
+                </MenuItem>
+              ))}
+            </Select>
+            {errors["contato.endereco.estado"] && (
+              <FormHelperText>
+                {errors["contato.endereco.estado"]}
+              </FormHelperText>
+            )}
+          </FormControl>
+          Ex: SP
+        </label>
+        <label>
+          <FormControl
+            variant="filled"
             sx={{
               display: "block",
+              marginBottom: "0.3rem",
             }}
+            error={!!errors["contato.endereco.cidade"]}
           >
-            <MenuItem value="">
-              <em>Cidade</em>
-            </MenuItem>
-            {cities.map((city: any) => (
-              <MenuItem key={city.id} value={city.nome}>
-                {city.nome}
+            <InputLabel id="demo-simple-select-filled-label">Cidade</InputLabel>
+            <Select
+              labelId="demo-simple-select-filled-label"
+              id="demo-simple-select-filled"
+              value={formData.contato.endereco.cidade}
+              onChange={(e: SelectChangeEvent) =>
+                handleInputChange(e, "contato", "endereco", "cidade")
+              }
+              sx={{
+                display: "block",
+              }}
+            >
+              <MenuItem value="">
+                <em>Cidade</em>
               </MenuItem>
-            ))}
-          </Select>
-          {errors["contato.endereco.cidade"] && (
-            <FormHelperText>{errors["contato.endereco.cidade"]}</FormHelperText>
-          )}
-        </FormControl>
+              {cities.map((city: any) => (
+                <MenuItem key={city.id} value={city.nome}>
+                  {city.nome}
+                </MenuItem>
+              ))}
+            </Select>
+            {errors["contato.endereco.cidade"] && (
+              <FormHelperText>
+                {errors["contato.endereco.cidade"]}
+              </FormHelperText>
+            )}
+          </FormControl>
+          Ex: São Paulo
+        </label>
         <label>
           <TextField
             value={formData.contato.endereco.cep}

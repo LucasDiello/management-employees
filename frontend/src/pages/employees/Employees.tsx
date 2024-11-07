@@ -45,6 +45,7 @@ import Loading from "../../components/loading/Loading";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import { FormData } from "../../types";
+import RenderFilters from "./Filters";
 
 type Status = "Contratado" | "Refunded" | "Demitido";
 
@@ -90,44 +91,6 @@ export default function OrderTable() {
     fetchEmployees();
   }, []);
 
-  const renderFilters = () => (
-    <React.Fragment>
-      <FormControl size="sm">
-        <FormLabel>Status</FormLabel>
-        <Select
-          size="sm"
-          placeholder="Filtrar por status"
-          slotProps={{ button: { sx: { whiteSpace: "nowrap" } } }}
-          onChange={(e, values) => {
-            setStatus(values);
-          }}
-        >
-          <Option value="">Todos</Option>
-          <Option value="Contratado">Contratado</Option>
-          <Option value="Demitido">Demitido</Option>
-          <Option value="Análise">Análise</Option>
-        </Select>
-      </FormControl>
-      <FormControl size="sm" onChange={(e) => console.log(e.target.value)}>
-        <FormLabel>Funcionários</FormLabel>
-        <Select
-          size="sm"
-          placeholder="todos"
-          onChange={(e, values) => {
-            setSelectedEmployee(values);
-          }}
-        >
-          <Option value="todos">Todos</Option>
-          {data.map((row: FormData) => (
-            <Option key={row.id} value={row.contato.nome}>
-              {row.contato.nome}
-            </Option>
-          ))}
-        </Select>
-      </FormControl>
-    </React.Fragment>
-  );
-
   // Função para mudar de página
   const handlePageChange = (direction: "next" | "prev") => {
     setCurrentPage((prev) =>
@@ -170,13 +133,21 @@ export default function OrderTable() {
   const pages = Array.from({ length: totalPages }, (_, index) => index + 1);
 
   return (
-    <React.Fragment>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 2,
+        flex: 1,
+        padding: 2,
+      }}
+    >
       <Box
         className="SearchAndFilters-tabletUp"
         sx={{
           borderRadius: "sm",
           py: 2,
-          display: { xs: "none", sm: "flex" },
+          display: { xs: "flex", sm: "flex" },
           flexWrap: "wrap",
           gap: 1.5,
           "& > *": {
@@ -193,18 +164,23 @@ export default function OrderTable() {
             onChange={(e) => setSearch(e.target.value)}
           />
         </FormControl>
-        {renderFilters()}
+        <RenderFilters
+          data={data}
+          setStatus={setStatus}
+          setSelectedEmployee={setSelectedEmployee}
+        />
       </Box>
       <Sheet
         className="OrderTableContainer"
         variant="outlined"
         sx={{
-          display: { xs: "none", sm: "initial" },
+          display: { xs: "flex", sm: "initial" },
           width: "100%",
           borderRadius: "sm",
           flexShrink: 1,
           overflow: "auto",
           minHeight: 0,
+          border: "none",
         }}
       >
         <Table
@@ -403,7 +379,7 @@ export default function OrderTable() {
           gap: 1,
           [`& .${iconButtonClasses.root}`]: { borderRadius: "50%" },
           display: {
-            xs: "none",
+            xs: "flex",
             md: "flex",
           },
         }}
@@ -442,6 +418,6 @@ export default function OrderTable() {
           Próximo
         </Button>
       </Box>
-    </React.Fragment>
+    </Box>
   );
 }

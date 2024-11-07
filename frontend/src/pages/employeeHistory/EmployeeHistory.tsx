@@ -12,12 +12,20 @@ import Paper from "@mui/material/Paper";
 import "./employeeHistory.css";
 import UpdateIcon from "@mui/icons-material/Update";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import dayjs from "dayjs";
+
+// Função para comparar dados
+const compareValues = (value1: string | number, value2: string | number) => {
+  console.log(value1, value2);
+  return value1 !== value2 ? "highlight-difference" : "";
+};
 
 const EmployeeHistory = () => {
   const { data, currentData } = useLoaderData() as {
     data: FormData[];
     currentData: FormData;
   };
+
   const [selectedDate, setSelectedDate] = useState(
     data[0]?.dataAlteracao || ""
   );
@@ -41,6 +49,7 @@ const EmployeeHistory = () => {
     currentData.funcionario.setor,
     currentData.funcionario.salario,
   ];
+
   return (
     <div className="employee-history layout">
       <Header />
@@ -53,20 +62,20 @@ const EmployeeHistory = () => {
       >
         {data.map((item, index) => (
           <option key={index} value={item.dataAlteracao}>
-            {item.dataAlteracao}
+            {dayjs(item.dataAlteracao).format("DD/MM/YYYY")} -{" "}
+            {dayjs(item.dataAlteracao).format("HH:mm:ss")}
           </option>
         ))}
       </select>
 
       <section>
         <div>
-          {/* Tabela de alterações com Material-UI */}
           {data.length ? (
             <>
               <h3>
-                Última Atualização <AccessTimeIcon />{" "}
+                Última Atualização <AccessTimeIcon />
               </h3>
-              <TableContainer component={Paper}>
+              <TableContainer>
                 <Table
                   sx={{ minWidth: 650 }}
                   aria-label="tabela de histórico de alterações"
@@ -108,20 +117,33 @@ const EmployeeHistory = () => {
 
                       return (
                         <TableRow key={index}>
-                          {rowData.map((data, cellIndex) => (
-                            <TableCell
-                              key={cellIndex}
-                              sx={{
-                                fontSize: "0.6rem",
-                                width: "200px",
-                                height: "70px",
-                                padding: "0.5rem",
-                              }}
-                              size="small"
-                            >
-                              {data}
-                            </TableCell>
-                          ))}
+                          {rowData.map((data, cellIndex) => {
+                            const highlightClass = compareValues(
+                              data,
+                              tableData[cellIndex]
+                            );
+                            return (
+                              <TableCell
+                                key={cellIndex}
+                                sx={{
+                                  fontSize: "0.6rem",
+                                  width: "200px",
+                                  height: "70px",
+                                  padding: "0.5rem",
+                                  fontWeight: highlightClass
+                                    ? "bold"
+                                    : "normal",
+                                  color: highlightClass ? "red" : "black",
+                                  borderBottom: highlightClass
+                                    ? "1px solid red"
+                                    : "none",
+                                }}
+                                size="small"
+                              >
+                                {data}
+                              </TableCell>
+                            );
+                          })}
                         </TableRow>
                       );
                     })}
@@ -133,11 +155,12 @@ const EmployeeHistory = () => {
             <h3>Não há alterações</h3>
           )}
         </div>
+
         <div>
           <h3>
-            Dados Atuais <UpdateIcon />{" "}
+            Dados Atuais <UpdateIcon />
           </h3>
-          <TableContainer component={Paper}>
+          <TableContainer>
             <Table sx={{ minWidth: 650 }} aria-label="tabela de dados atuais">
               <TableHead>
                 <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
@@ -158,20 +181,22 @@ const EmployeeHistory = () => {
               </TableHead>
               <TableBody>
                 <TableRow>
-                  {tableData.map((data, index) => (
-                    <TableCell
-                      key={index}
-                      sx={{
-                        fontSize: "0.6rem",
-                        width: "200px",
-                        height: "70px",
-                        padding: "0.5rem",
-                      }}
-                      size="small"
-                    >
-                      {data}
-                    </TableCell>
-                  ))}
+                  {tableData.map((data, index) => {
+                    return (
+                      <TableCell
+                        key={index}
+                        sx={{
+                          fontSize: "0.6rem",
+                          width: "200px",
+                          height: "70px",
+                          padding: "0.5rem",
+                        }}
+                        size="small"
+                      >
+                        {data}
+                      </TableCell>
+                    );
+                  })}
                 </TableRow>
               </TableBody>
             </Table>

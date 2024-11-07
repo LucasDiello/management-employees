@@ -276,3 +276,134 @@ img {
 button {
     cursor: pointer;
 }
+
+@media screen and (max-width: 768px) {
+
+    form {
+        min-width: 100%;
+    }
+
+    .layout-form-add-employees {
+        margin-top: 120px;
+    }
+
+    .form-step2 {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-input-group1 {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .form-input-group2 {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .form-input-group3 {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .form-input-group4 {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .content-input-group1 {
+        width: 100%;
+    }
+
+    .profile-image {
+        width: 100%;
+    }
+
+    .profile-image > div:nth-child(2) > img {
+        height: 100%;
+        width: 140px;
+    }
+
+    .profile-image > div:last-child {
+        width: 100%;
+        align-items: center;
+    }
+
+    .btn-photo {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .buttons {
+        gap: 20px;
+    }
+
+    .btn-previous {
+        width: 100%;
+    }
+
+    .btn-next {
+        width: 100%;
+    }
+
+    .header-form-employees {
+        height: 100px;
+    }
+
+    .header-form-employees > div > div:first-child {
+        gap: 1rem;
+    }
+
+    .header-form-employees > div > div:first-child > div:last-child > p:first-child {
+        font-size: 0.6rem;
+    }
+
+    .header-form-employees > div > div:first-child > div:last-child > p:last-child {
+        font-size: 0.8rem;
+    }
+
+    .title-infos {
+        margin-bottom: 0.5rem;
+    }
+
+    .title-infos > h1 {
+        font-size: 2rem;
+    }
+
+    .title-infos > p {
+        font-size: 0.6rem;
+    }
+
+    .steps-loading {
+        height: 5px;
+    }
+
+    h2 {
+        font-size: 0.6rem;
+    }
+
+    .form-input-group1 {
+        height: 100%;
+    }
+
+    .form-input-group2 {
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+
+    .form-input-group2 > label {
+        width: 100%;
+    }
+
+    .form-input-group3 {
+        padding-bottom: 20px;
+    }
+
+    .form-input-group3 > label:first-child, .form-input-group3 > label:nth-child(2), .form-input-group3 > label:last-child {
+        width: 100%;
+        margin-right: 0;
+    }
+
+}
+

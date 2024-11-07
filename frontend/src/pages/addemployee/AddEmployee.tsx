@@ -50,7 +50,7 @@ const AddEmployee = () => {
 
   return (
     <div>
-      <header className="header-form-employees">
+      <header className="header-form-employees ">
         <div className="content-header">
           <div>
             <div>
