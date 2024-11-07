@@ -41,7 +41,7 @@ const EmployeeHistory = () => {
     currentData.contato.cpf,
     currentData.contato.rg,
     currentData.contato.telefone,
-    currentData.contato.dataAniversario,
+    dayjs(currentData.contato.dataAniversario).format("DD/MM/YYYY"),
     `${currentData.contato.endereco.rua}, ${currentData.contato.endereco.numero}, ${currentData.contato.endereco.bairro}, ${currentData.contato.endereco.cidade}, ${currentData.contato.endereco.estado}, ${currentData.contato.endereco.cep}`,
     currentData.funcionario.status,
     currentData.funcionario.cargo,
@@ -106,7 +106,9 @@ const EmployeeHistory = () => {
                         change.contato.cpf,
                         change.contato.rg,
                         change.contato.telefone,
-                        change.contato.dataAniversario,
+                        dayjs(change.contato.dataAniversario).format(
+                          "DD/MM/YYYY"
+                        ),
                         `${change.contato.endereco.rua}, ${change.contato.endereco.numero}, ${change.contato.endereco.bairro}, ${change.contato.endereco.cidade}, ${change.contato.endereco.estado}, ${change.contato.endereco.cep}`,
                         change.funcionario.status,
                         change.funcionario.cargo,
@@ -136,7 +138,7 @@ const EmployeeHistory = () => {
                                   color: highlightClass ? "red" : "black",
                                   borderBottom: highlightClass
                                     ? "1px solid red"
-                                    : "none",
+                                    : " ",
                                 }}
                                 size="small"
                               >
