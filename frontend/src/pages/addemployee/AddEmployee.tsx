@@ -46,7 +46,7 @@ const AddEmployee = () => {
         <div className="content-header">
           <div>
             <div>
-              <h1>Taugor</h1>
+              <h1>TechNova</h1>
               <p>Simplesmente Dinâmico</p>
             </div>
             <div>

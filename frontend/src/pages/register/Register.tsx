@@ -283,7 +283,7 @@ export default function Register() {
           </Box>
           <Box component="footer" sx={{ py: 3 }}>
             <Typography level="body-xs" sx={{ textAlign: "center" }}>
-              © Taugor {new Date().getFullYear()}
+              © TechNova {new Date().getFullYear()}
             </Typography>
           </Box>
         </Box>
