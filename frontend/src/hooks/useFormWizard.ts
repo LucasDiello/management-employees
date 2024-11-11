@@ -1,7 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { FormData } from "../types";
-import { SelectChangeEvent } from "@mui/material";
 import gerarPDF from "../temp/gerarPDF";
 import { apiRequest } from "../libs/apiRequest";
 import { formDataSchema } from "../schema/formDataSchema";
@@ -9,11 +7,11 @@ import { z } from "zod";
 
 export const useFormWizard = (initialData : FormData | null = null) => {
     
-    const steps = ["1", "2", "3"];
     const stepsText: { [key: string]: string }[] = [
       { "0": "Informações de Contato" },
       { "1": "Informações do Funcionário" },
-      { "2": "Conclusão" },
+      { "2": "Informações dos Benefícios" },
+      { "3": "Conclusão" },
     ];
     const [currentStep, setCurrentStep] = useState<number>(0);
     const [formData, setFormData] = useState<FormData>(
@@ -42,6 +40,13 @@ export const useFormWizard = (initialData : FormData | null = null) => {
           dataAdmissao: "",
           setor: "",
           salario: "",
+          beneficios: {
+            valeRefeicao: "",
+            valeTransporte: false,
+            planoSaude: false,
+            auxilioHomeOffice: false,
+            auxilioCreche: false,
+          }
         },
       }
     );
@@ -53,13 +58,12 @@ export const useFormWizard = (initialData : FormData | null = null) => {
       e:
         | React.ChangeEvent<
             HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-          >
-        | SelectChangeEvent,
+          > 
+         ,
       section: "contato" | "funcionario",
       field: string,
-      subfield?: string
+      subfield?: string 
     ) => {
-
 
       setFormData((prevData) => ({
         ...prevData,
@@ -69,13 +73,18 @@ export const useFormWizard = (initialData : FormData | null = null) => {
             subfield && section === "contato" && field === "endereco"
               ? {
                   ...prevData.contato.endereco,
+                  [subfield]: e.target.value ,
+                }
+              : subfield && section === "funcionario" && field === "beneficios" 
+              ? {
+                  ...prevData.funcionario.beneficios,
                   [subfield]: e.target.value,
                 }
               : e.target.value,
         },
       }));
     };
-  
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       setLoading(true);
@@ -83,12 +92,12 @@ export const useFormWizard = (initialData : FormData | null = null) => {
         formDataSchema.parse(formData);
         if (initialData) {
           const { data } = await apiRequest.put(`/employees/${initialData.id}`, formData);
-          gerarPDF(formData, false, data.id);
+          gerarPDF(data, false);
           
         } else {
           const {data} = await apiRequest.post("/employees", formData);
          setIdEmployee(data.id);
-         gerarPDF(formData, false, data.id);
+         gerarPDF(data, false);
         }
       } catch (error) {
         if (error instanceof z.ZodError) {
@@ -107,7 +116,6 @@ export const useFormWizard = (initialData : FormData | null = null) => {
   
     return {
       idEmployee,
-      steps,
       stepsText,
       currentStep,
       setCurrentStep,
@@ -116,6 +124,6 @@ export const useFormWizard = (initialData : FormData | null = null) => {
       handleInputChange,
       handleSubmit,
         errors
-    };
+      };
   };
   

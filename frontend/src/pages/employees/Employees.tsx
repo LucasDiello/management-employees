@@ -61,7 +61,7 @@ const statusToColor: Record<Status, "success" | "neutral" | "danger"> = {
   Demitido: "danger",
 };
 export default function OrderTable() {
-  const [order, setOrder] = useState<Order>("desc");
+  const [order, setOrder] = useState<Order>("asc");
   const [selected, setSelected] = useState<readonly string[]>([]);
   const [open, setOpen] = useState(false);
   const [data, setData] = useState<string[]>([]);
@@ -100,12 +100,13 @@ export default function OrderTable() {
 
   const handleDownloadPDF = async (formData: FormData) => {
     try {
-      gerarPDF(formData, true, formData.id);
+      gerarPDF(formData, true);
     } catch (error) {
       console.error(error);
     }
   };
 
+  console.log(data);
   // Filtrar os itens
   const filteredItems = data
     .filter((row) => {
@@ -127,6 +128,7 @@ export default function OrderTable() {
     startIndex,
     startIndex + itemsPerPage
   );
+  console.log(currentItems);
 
   // Calcular o total de páginas
   const totalPages = Math.ceil(data.length / itemsPerPage);
@@ -264,7 +266,7 @@ export default function OrderTable() {
             </tbody>
           ) : (
             <tbody>
-              {[...filteredItems]
+              {[...currentItems]
                 .sort(getComparator(order, "id"))
                 .map((row: FormData) => (
                   <tr key={row.id}>

@@ -2,30 +2,17 @@ import React, { useEffect, useState } from "react";
 import MenuHeader from "../../components/header/MenuHeader";
 import "./addemployee.css";
 import { storage } from "../../libs/firebaseConfig";
-import {
-  FormControl,
-  FormLabel,
-  Radio,
-  RadioGroup,
-  Switch,
-  TextField,
-  FormControlLabel,
-} from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Step2Form from "./Step2Form";
-import Step3Form from "./Step3Form";
-import EditIcon from "@mui/icons-material/Edit";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import userDefault from "./userDefault.jpg";
 import useFileUpload from "../../hooks/useFileUpload";
-import ProfileImageUpload from "./ProfileImageUpload";
 import Step1Form from "./Step1Form";
 import { useFormWizard } from "../../hooks/useFormWizard";
 import { useNavigate } from "react-router-dom";
+import Step4Form from "./Step4Form";
+import Step3Form from "./Step3Form";
 
 const AddEmployee = () => {
   const {
-    steps,
     stepsText,
     currentStep,
     setCurrentStep,
@@ -46,8 +33,13 @@ const AddEmployee = () => {
   }, [idEmployee]);
 
   const loadingWidth =
-    currentStep === 0 ? "33%" : currentStep === 1 ? "66%" : "100%";
-
+    currentStep === 0
+      ? "25%"
+      : currentStep === 1
+      ? "50%"
+      : currentStep === 2
+      ? "75%"
+      : "100%";
   return (
     <div>
       <header className="header-form-employees ">
@@ -59,7 +51,7 @@ const AddEmployee = () => {
             </div>
             <div>
               <p>
-                passo {currentStep + 1} de {steps.length}
+                passo {currentStep + 1} de {stepsText.length}
               </p>
               <p>
                 {currentStep >= 0 && currentStep < stepsText.length
@@ -122,7 +114,14 @@ const AddEmployee = () => {
               errors={errors}
             />
           )}
-          {currentStep === 2 && <Step3Form formData={formData} />}
+          {currentStep === 2 && (
+            <Step3Form
+              formData={formData}
+              handleInputChange={handleInputChange}
+              errors={errors}
+            />
+          )}
+          {currentStep === 3 && <Step4Form formData={formData} />}
           <div className="buttons">
             <button
               type="button"
@@ -133,7 +132,7 @@ const AddEmployee = () => {
               <ArrowBackIcon sx={{ fontSize: 18, color: "#5bb9f4" }} />
               Anterior
             </button>
-            {currentStep === 2 && (
+            {currentStep === 3 && (
               <button type="submit" className="btn-next">
                 Finalizar
               </button>
@@ -141,7 +140,7 @@ const AddEmployee = () => {
             <button
               type="button"
               className="btn-next"
-              disabled={currentStep === 2}
+              disabled={currentStep === 3}
               onClick={() => setCurrentStep(currentStep + 1)}
             >
               Próximo

@@ -8,11 +8,12 @@ import { useFormWizard } from "../../hooks/useFormWizard";
 import { FormData } from "../../types";
 import Step1Form from "../addemployee/Step1Form";
 import Step2Form from "../addemployee/Step2Form";
-import Step3Form from "../addemployee/Step3Form";
+import Step4Form from "../addemployee/Step4Form";
 import useFileUpload from "../../hooks/useFileUpload";
 import { storage } from "../../libs/firebaseConfig";
 import { getDownloadURL, ref } from "firebase/storage";
 import profileDefault from "../addemployee/userDefault.jpg";
+import Step3Form from "../addemployee/Step3Form";
 
 const UpdateEmployee = () => {
   const data = useLoaderData() as FormData;
@@ -20,7 +21,6 @@ const UpdateEmployee = () => {
     null
   );
   const {
-    steps,
     stepsText,
     currentStep,
     setCurrentStep,
@@ -65,7 +65,7 @@ const UpdateEmployee = () => {
         <div className="steps-loading">
           <div
             style={{
-              width: `${(currentStep + 1) * (100 / steps.length)}%`,
+              width: `${(currentStep + 1) * (100 / stepsText.length)}%`,
               transition: "width 0.5s",
               backgroundColor: "lightblue",
               height: "7px",
@@ -110,7 +110,14 @@ const UpdateEmployee = () => {
               errors={errors}
             />
           )}
-          {currentStep === 2 && <Step3Form formData={formData} />}
+          {currentStep === 2 && (
+            <Step3Form
+              formData={formData}
+              handleInputChange={handleInputChange}
+              errors={errors}
+            />
+          )}
+          {currentStep === 3 && <Step4Form formData={formData} />}
           <div className="buttons">
             <button
               type="button"
@@ -121,7 +128,7 @@ const UpdateEmployee = () => {
               <ArrowBackIcon sx={{ fontSize: 18, color: "#5bb9f4" }} />
               Anterior
             </button>
-            {currentStep === 2 && (
+            {currentStep === 3 && (
               <button type="submit" className="btn-next">
                 Finalizar
               </button>
@@ -129,7 +136,7 @@ const UpdateEmployee = () => {
             <button
               type="button"
               className="btn-next"
-              disabled={currentStep === 2}
+              disabled={currentStep === 3}
               onClick={() => setCurrentStep(currentStep + 1)}
             >
               Próximo

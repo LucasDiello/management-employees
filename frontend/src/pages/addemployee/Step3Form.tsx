@@ -1,36 +1,240 @@
-import dayjs from "dayjs";
-import React from "react";
+import React, { useState } from "react";
+import "./addemployee.css";
+import {
+  FormControl,
+  TextField,
+  Select,
+  InputLabel,
+  MenuItem,
+  SelectChangeEvent,
+  FormHelperText,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+} from "@mui/material";
+import { FormLabel } from "@mui/joy";
 
-const Step3Form = ({ formData }: { formData: any }) => {
+const Step3Form = ({
+  formData,
+  handleInputChange,
+  errors,
+}: {
+  formData: any;
+  handleInputChange: any;
+  errors: { [key: string]: string };
+}) => {
   return (
     <>
-      <div className="form-step3">
-        <h4>Informações de Contato</h4>
-        <p>Nome: {formData.contato.nome}</p>
-        <p>Email: {formData.contato.email}</p>
-        <p>CPF: {formData.contato.cpf}</p>
-        <p>RG: {formData.contato.rg}</p>
-        <p>Sexo: {formData.contato.sexo}</p>
-        <p>Rua: {formData.contato.endereco.rua}</p>
-        <p>Número: {formData.contato.endereco.numero}</p>
-        <p>Bairro: {formData.contato.endereco.bairro}</p>
-        <p>Cidade: {formData.contato.endereco.cidade}</p>
-        <p>Estado: {formData.contato.endereco.estado}</p>
-        <p>CEP: {formData.contato.endereco.cep}</p>
-        <p>Telefone: {formData.contato.telefone}</p>
-        <p>
-          Data de Aniversário:{" "}
-          {dayjs(formData.contato.dataAniversario).format("DD-MM-YYYY")}
-        </p>
-        <h4>Informações do Funcionário</h4>
-        <p>Status: {formData.funcionario.status}</p>
-        <p>Cargo: {formData.funcionario.cargo}</p>
-        <p>
-          Data de Admissão:{" "}
-          {dayjs(formData.funcionario.dataAdmissao).format("DD-MM-YYYY")}
-        </p>
-        <p>Setor: {formData.funcionario.setor}</p>
-        <p>Salário: {formData.funcionario.salario}</p>
+      <div className="form-input-group2">
+        <label>
+          <TextField
+            type="number"
+            value={formData.funcionario.beneficios.valeRefeicao}
+            onChange={(e) =>
+              handleInputChange(e, "funcionario", "beneficios", "valeRefeicao")
+            }
+            sx={{ marginBottom: "0.3rem" }}
+            id="filled-basic"
+            label="Vale Refeição"
+            variant="filled"
+            className="input"
+            error={!!errors["funcionario.salario"]} // corrigir erro
+          />
+          Ex: 1000.00
+        </label>
+        <div className="sex">
+          <FormControl>
+            <FormLabel id="plano-saude-label" sx={{ fontSize: "0.7rem" }}>
+              Plano de Saúde
+            </FormLabel>
+            <RadioGroup
+              row
+              aria-labelledby="plano-saude-label"
+              defaultValue={false}
+              name="radio-buttons-group"
+              value={formData.funcionario.beneficios.planoSaude}
+              onChange={(e) =>
+                handleInputChange(
+                  {
+                    ...e,
+                    target: {
+                      ...e.target,
+                      value: e.target.value === "true",
+                    } as any,
+                  },
+                  "funcionario",
+                  "beneficios",
+                  "planoSaude"
+                )
+              }
+            >
+              <FormControlLabel
+                value={true}
+                control={<Radio sx={{ transform: "scale(0.8)" }} />}
+                label="Sim"
+                sx={{
+                  "& .MuiFormControlLabel-label": {
+                    fontSize: "0.7rem",
+                  },
+                }}
+              />
+              <FormControlLabel
+                value={false}
+                control={<Radio sx={{ transform: "scale(0.8)" }} />}
+                label="Não"
+                sx={{
+                  "& .MuiFormControlLabel-label": {
+                    fontSize: "0.7rem",
+                  },
+                }}
+              />
+            </RadioGroup>
+          </FormControl>
+
+          <FormControl>
+            <FormLabel id="plano-saude-label" sx={{ fontSize: "0.7rem" }}>
+              Auxílio creche
+            </FormLabel>
+            <RadioGroup
+              row
+              aria-labelledby="plano-saude-label"
+              defaultValue={false}
+              name="radio-buttons-group"
+              value={formData.funcionario.beneficios.auxilioCreche}
+              onChange={(e) =>
+                handleInputChange(
+                  {
+                    ...e,
+                    target: {
+                      ...e.target,
+                      value: e.target.value === "true",
+                    } as any,
+                  },
+                  "funcionario",
+                  "beneficios",
+                  "auxilioCreche"
+                )
+              }
+            >
+              <FormControlLabel
+                value={true}
+                control={<Radio sx={{ transform: "scale(0.8)" }} />}
+                label="Sim"
+                sx={{
+                  "& .MuiFormControlLabel-label": {
+                    fontSize: "0.7rem",
+                  },
+                }}
+              />
+              <FormControlLabel
+                value={false}
+                control={<Radio sx={{ transform: "scale(0.8)" }} />}
+                label="Não"
+                sx={{
+                  "& .MuiFormControlLabel-label": {
+                    fontSize: "0.7rem",
+                  },
+                }}
+              />
+            </RadioGroup>
+          </FormControl>
+
+          <FormControl>
+            <FormLabel id="plano-saude-label" sx={{ fontSize: "0.7rem" }}>
+              Vale Transporte
+            </FormLabel>
+            <RadioGroup
+              row
+              aria-labelledby="plano-saude-label"
+              defaultValue={false}
+              name="radio-buttons-group"
+              value={formData.funcionario.beneficios.valeTransporte}
+              onChange={(e) =>
+                handleInputChange(
+                  {
+                    ...e,
+                    target: {
+                      ...e.target,
+                      value: e.target.value === "true",
+                    } as any,
+                  },
+                  "funcionario",
+                  "beneficios",
+                  "valeTransporte"
+                )
+              }
+            >
+              <FormControlLabel
+                value={true}
+                control={<Radio sx={{ transform: "scale(0.8)" }} />}
+                label="Sim"
+                sx={{
+                  "& .MuiFormControlLabel-label": {
+                    fontSize: "0.7rem",
+                  },
+                }}
+              />
+              <FormControlLabel
+                value={false}
+                control={<Radio sx={{ transform: "scale(0.8)" }} />}
+                label="Não"
+                sx={{
+                  "& .MuiFormControlLabel-label": {
+                    fontSize: "0.7rem",
+                  },
+                }}
+              />
+            </RadioGroup>
+          </FormControl>
+
+          <FormControl>
+            <FormLabel id="plano-saude-label" sx={{ fontSize: "0.7rem" }}>
+              Auxílio Home Office
+            </FormLabel>
+            <RadioGroup
+              row
+              aria-labelledby="plano-saude-label"
+              defaultValue={false}
+              name="radio-buttons-group"
+              value={formData.funcionario.beneficios.auxilioHomeOffice}
+              onChange={(e) =>
+                handleInputChange(
+                  {
+                    ...e,
+                    target: {
+                      ...e.target,
+                      value: e.target.value === "true",
+                    } as any,
+                  },
+                  "funcionario",
+                  "beneficios",
+                  "auxilioHomeOffice"
+                )
+              }
+            >
+              <FormControlLabel
+                value={true}
+                control={<Radio sx={{ transform: "scale(0.8)" }} />}
+                label="Sim"
+                sx={{
+                  "& .MuiFormControlLabel-label": {
+                    fontSize: "0.7rem",
+                  },
+                }}
+              />
+              <FormControlLabel
+                value={false}
+                control={<Radio sx={{ transform: "scale(0.8)" }} />}
+                label="Não"
+                sx={{
+                  "& .MuiFormControlLabel-label": {
+                    fontSize: "0.7rem",
+                  },
+                }}
+              />
+            </RadioGroup>
+          </FormControl>
+        </div>
       </div>
     </>
   );

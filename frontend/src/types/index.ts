@@ -26,6 +26,13 @@ interface Funcionario {
   dataAdmissao: string;
   setor: string;
   salario: string;
+  beneficios: {
+    valeRefeicao: string;
+    valeTransporte: boolean;
+    planoSaude: boolean;
+    auxilioHomeOffice: boolean;
+    auxilioCreche: boolean;
+  };
 }
 
 export interface FormData {
