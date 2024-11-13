@@ -20,9 +20,9 @@ export const formDataSchema = z.object({
         .regex(/^\d{5}-?\d{3}$/, "CEP inválido (ex: 12345678 ou 12345-678)"),
     }),
     telefone: z
-      .string()
-      .min(8, "Telefone é obrigatório")
-      .regex(/^\d+$/, "Telefone deve conter apenas números"),
+    .string()
+    .min(8, "Telefone é obrigatório")
+    .regex(/^\(?\d{2}\)?\s?\d{8,9}$/, "Telefone deve estar em um formato válido"),
     dataAniversario: z
       .string()
       .refine((data) => !isNaN(Date.parse(data)), {
