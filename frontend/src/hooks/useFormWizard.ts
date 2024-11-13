@@ -4,6 +4,7 @@ import gerarPDF from "../temp/gerarPDF";
 import { apiRequest } from "../libs/apiRequest";
 import { formDataSchema } from "../schema/formDataSchema";
 import { z } from "zod";
+import { useNavigate } from "react-router-dom";
 
 export const useFormWizard = (initialData : FormData | null = null) => {
     
@@ -14,6 +15,7 @@ export const useFormWizard = (initialData : FormData | null = null) => {
       { "3": "Conclusão" },
     ];
     const [currentStep, setCurrentStep] = useState<number>(0);
+    const navigate = useNavigate();
     const [formData, setFormData] = useState<FormData>(
       initialData || {
         contato: {
@@ -93,11 +95,12 @@ export const useFormWizard = (initialData : FormData | null = null) => {
         if (initialData) {
           const { data } = await apiRequest.put(`/employees/${initialData.id}`, formData);
           gerarPDF(data, false);
-          
+          navigate("/");
         } else {
           const {data} = await apiRequest.post("/employees", formData);
          setIdEmployee(data.id);
          gerarPDF(data, false);
+          navigate("/");
         }
       } catch (error) {
         if (error instanceof z.ZodError) {

@@ -47,9 +47,6 @@ const UpdateEmployee = () => {
 
   const { previewUrl, getInputProps } = useFileUpload(storage, data.id || "");
 
-  if (loading) {
-    return <h1>Carregando...</h1>;
-  }
   return (
     <div>
       <header className="header-form-employees">
@@ -90,7 +87,9 @@ const UpdateEmployee = () => {
         <form
           onSubmit={(e) => {
             handleSubmit(e);
-            navigate("/");
+            if (errors) {
+              setCurrentStep(currentStep - 3);
+            }
           }}
         >
           {currentStep === 0 && (

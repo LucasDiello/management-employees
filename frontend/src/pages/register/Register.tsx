@@ -171,7 +171,7 @@ export default function Register() {
               <IconButton variant="soft" color="primary" size="sm">
                 <BadgeRoundedIcon />
               </IconButton>
-              <Typography level="title-lg">Taugor</Typography>
+              <Typography level="title-lg">TechNova</Typography>
             </Box>
             <ColorSchemeToggle />
           </Box>

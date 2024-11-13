@@ -81,7 +81,7 @@ const EmployeeHistory = () => {
                   aria-label="tabela de histórico de alterações"
                 >
                   <TableHead>
-                    <TableRow>
+                    <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
                       <TableCell>Nome</TableCell>
                       <TableCell>Email Anterior</TableCell>
                       <TableCell>Sexo</TableCell>
@@ -132,6 +132,7 @@ const EmployeeHistory = () => {
                                   width: "200px",
                                   height: "70px",
                                   padding: "0.5rem",
+                                  textAlign: "center",
                                   fontWeight: highlightClass
                                     ? "bold"
                                     : "normal",
@@ -192,6 +193,7 @@ const EmployeeHistory = () => {
                           width: "200px",
                           height: "70px",
                           padding: "0.5rem",
+                          textAlign: "center",
                         }}
                         size="small"
                       >

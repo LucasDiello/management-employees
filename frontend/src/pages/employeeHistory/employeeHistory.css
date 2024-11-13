@@ -7,3 +7,7 @@ section > div > h3 {
     align-items: center;
     gap: 10px;
 }
+
+.css-1orzuox-MuiTableCell-root {
+    text-align: center !important;
+}
