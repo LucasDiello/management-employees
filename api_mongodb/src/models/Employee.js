@@ -24,7 +24,14 @@ const EmployeeSchema = new mongoose.Schema({
     cargo: String,
     dataAdmissao: String,
     setor: String,
-    salario: String,
+    salario: Number,
+    beneficios: {
+      valeRefeicao: Number,
+      valeTransporte: Boolean,
+      planoSaude: Boolean,
+      auxilioHomeOffice: Boolean,
+      auxilioCreche: Boolean,
+    },
   },
 });
 
