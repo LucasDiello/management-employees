@@ -30,6 +30,7 @@ const AddEmployee = () => {
     if (idEmployee) {
       navigate(`/`);
     }
+
   }, [idEmployee]);
 
   const loadingWidth =

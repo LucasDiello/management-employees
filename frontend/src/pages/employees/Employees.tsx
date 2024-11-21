@@ -106,7 +106,6 @@ export default function OrderTable() {
     }
   };
 
-  console.log(data);
   // Filtrar os itens
   const filteredItems = data
     .filter((row) => {
@@ -128,7 +127,6 @@ export default function OrderTable() {
     startIndex,
     startIndex + itemsPerPage
   );
-  console.log(currentItems);
 
   // Calcular o total de páginas
   const totalPages = Math.ceil(data.length / itemsPerPage);

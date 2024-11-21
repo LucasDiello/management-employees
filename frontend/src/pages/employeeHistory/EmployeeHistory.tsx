@@ -2,21 +2,12 @@ import React, { useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import { FormData } from "../../types";
 import Header from "../../components/header/Header";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import "./employeeHistory.css";
-import UpdateIcon from "@mui/icons-material/Update";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import dayjs from "dayjs";
+import "./employeeHistory.css";
+import { FaInfoCircle } from "react-icons/fa";
 
 // Função para comparar dados
 const compareValues = (value1: string | number, value2: string | number) => {
-  console.log(value1, value2);
   return value1 !== value2 ? "highlight-difference" : "";
 };
 
@@ -34,6 +25,22 @@ const EmployeeHistory = () => {
     (item) => item.dataAlteracao === selectedDate
   );
 
+  const labels = [
+    "Nome",
+    "E-mail",
+    "Sexo",
+    "CPF",
+    "RG",
+    "Telefone",
+    "Data de Aniversário",
+    "Endereço",
+    "Status",
+    "Cargo",
+    "Data de Admissão",
+    "Setor",
+    "Salário",
+  ];
+
   const tableData = [
     currentData.contato.nome,
     currentData.contato.email,
@@ -49,6 +56,24 @@ const EmployeeHistory = () => {
     currentData.funcionario.setor,
     currentData.funcionario.salario,
   ];
+
+  const alteredData = selectedChanges.map((change) => {
+    return [
+      change.contato.nome,
+      change.contato.email,
+      change.contato.sexo,
+      change.contato.cpf,
+      change.contato.rg,
+      change.contato.telefone,
+      dayjs(change.contato.dataAniversario).format("DD/MM/YYYY"),
+      `${change.contato.endereco.rua}, ${change.contato.endereco.numero}, ${change.contato.endereco.bairro}, ${change.contato.endereco.cidade}, ${change.contato.endereco.estado}, ${change.contato.endereco.cep}`,
+      change.funcionario.status,
+      change.funcionario.cargo,
+      change.funcionario.dataAdmissao,
+      change.funcionario.setor,
+      change.funcionario.salario,
+    ];
+  });
 
   return (
     <div className="employee-history layout">
@@ -68,143 +93,46 @@ const EmployeeHistory = () => {
         ))}
       </select>
 
-      <section>
+      <section className="grid-container">
         <div>
+          <h3>Última Atualização</h3>
           {data.length ? (
-            <>
-              <h3>
-                Última Atualização <AccessTimeIcon />
-              </h3>
-              <TableContainer>
-                <Table
-                  sx={{ minWidth: 650 }}
-                  aria-label="tabela de histórico de alterações"
-                >
-                  <TableHead>
-                    <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
-                      <TableCell>Nome</TableCell>
-                      <TableCell>Email Anterior</TableCell>
-                      <TableCell>Sexo</TableCell>
-                      <TableCell>CPF</TableCell>
-                      <TableCell>RG</TableCell>
-                      <TableCell>Telefone Anterior</TableCell>
-                      <TableCell>Data de Aniversário</TableCell>
-                      <TableCell>Endereço</TableCell>
-                      <TableCell>Status</TableCell>
-                      <TableCell>Cargo</TableCell>
-                      <TableCell>Data de Admissão</TableCell>
-                      <TableCell>Setor</TableCell>
-                      <TableCell>Salário</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {selectedChanges.map((change, index) => {
-                      const rowData = [
-                        change.contato.nome,
-                        change.contato.email,
-                        change.contato.sexo,
-                        change.contato.cpf,
-                        change.contato.rg,
-                        change.contato.telefone,
-                        dayjs(change.contato.dataAniversario).format(
-                          "DD/MM/YYYY"
-                        ),
-                        `${change.contato.endereco.rua}, ${change.contato.endereco.numero}, ${change.contato.endereco.bairro}, ${change.contato.endereco.cidade}, ${change.contato.endereco.estado}, ${change.contato.endereco.cep}`,
-                        change.funcionario.status,
-                        change.funcionario.cargo,
-                        change.funcionario.dataAdmissao,
-                        change.funcionario.setor,
-                        change.funcionario.salario,
-                      ];
-
-                      return (
-                        <TableRow key={index}>
-                          {rowData.map((data, cellIndex) => {
-                            const highlightClass = compareValues(
-                              data,
-                              tableData[cellIndex]
-                            );
-                            return (
-                              <TableCell
-                                key={cellIndex}
-                                sx={{
-                                  fontSize: "0.6rem",
-                                  width: "200px",
-                                  height: "70px",
-                                  padding: "0.5rem",
-                                  textAlign: "center",
-                                  fontWeight: highlightClass
-                                    ? "bold"
-                                    : "normal",
-                                  color: highlightClass ? "red" : "black",
-                                  borderBottom: highlightClass
-                                    ? "1px solid red"
-                                    : " ",
-                                }}
-                                size="small"
-                              >
-                                {data}
-                              </TableCell>
-                            );
-                          })}
-                        </TableRow>
-                      );
-                    })}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </>
+            alteredData.map((row, rowIndex) => (
+              <div key={rowIndex} className="grid-row">
+                {row.map((value, colIndex) => (
+                  <div
+                    key={colIndex}
+                    className={`grid-cell ${compareValues(
+                      value,
+                      tableData[colIndex]
+                    )}`}
+                  >
+                    <strong>{labels[colIndex]}:</strong> {value}
+                  </div>
+                ))}
+              </div>
+            ))
           ) : (
-            <h3>Não há alterações</h3>
+            <div
+              className="
+            no-changes
+"
+            >
+              <p>Não há alterações.</p>
+              <FaInfoCircle />
+            </div>
           )}
         </div>
 
         <div>
-          <h3>
-            Dados Atuais <UpdateIcon />
-          </h3>
-          <TableContainer>
-            <Table sx={{ minWidth: 650 }} aria-label="tabela de dados atuais">
-              <TableHead>
-                <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
-                  <TableCell>Nome</TableCell>
-                  <TableCell>Email Atual</TableCell>
-                  <TableCell>Sexo</TableCell>
-                  <TableCell>CPF</TableCell>
-                  <TableCell>RG</TableCell>
-                  <TableCell>Telefone Atual</TableCell>
-                  <TableCell>Data de Aniversário</TableCell>
-                  <TableCell>Endereço</TableCell>
-                  <TableCell>Status</TableCell>
-                  <TableCell>Cargo</TableCell>
-                  <TableCell>Data de Admissão</TableCell>
-                  <TableCell>Setor</TableCell>
-                  <TableCell>Salário</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                <TableRow>
-                  {tableData.map((data, index) => {
-                    return (
-                      <TableCell
-                        key={index}
-                        sx={{
-                          fontSize: "0.6rem",
-                          width: "200px",
-                          height: "70px",
-                          padding: "0.5rem",
-                          textAlign: "center",
-                        }}
-                        size="small"
-                      >
-                        {data}
-                      </TableCell>
-                    );
-                  })}
-                </TableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
+          <h3>Dados Atuais</h3>
+          <div className="grid-row">
+            {tableData.map((data, index) => (
+              <div key={index} className="grid-cell">
+                <strong>{labels[index]}:</strong> {data}
+              </div>
+            ))}
+          </div>
         </div>
       </section>
     </div>
