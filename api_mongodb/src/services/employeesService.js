@@ -1,10 +1,9 @@
 import Employee from "../models/Employee.js";
 import EmployeeHistorySchema from "../models/EmployeeHistorySchema.js";
 
-// Função para transformar os funcionários, substituindo _id por id
 const transformEmployee = (employee) => ({
   id: employee._id,
-  ...employee.toObject(), // Espalha outras propriedades do objeto
+  ...employee.toObject(),
 });
 
 export const createEmployees = async (data) => {
@@ -29,13 +28,11 @@ export const updateEmployees = async (id, data) => {
     };
   }
 
-  // Salvar o estado atual no histórico antes da atualização
   const historyData = { ...employee.toObject(), employeeId: id };
-  delete historyData._id; // Garante que não enviamos um _id
+  delete historyData._id;
 
-  await EmployeeHistorySchema.create(historyData); // Cria novo histórico sem _id
+  await EmployeeHistorySchema.create(historyData);
 
-  // Atualizar os dados do funcionário
   const updatedEmployee = await Employee.findByIdAndUpdate(id, data, {
     new: true,
   });
@@ -52,6 +49,12 @@ export const getEmployeeById = async (id) => {
 
 export const deleteEmployees = async (id) => {
   const employee = await Employee.findByIdAndDelete(id);
+  // const historyData = await EmployeeHistorySchema.find({ employee });
+
+  // if (historyData) {
+  //   await EmployeeHistorySchema.deleteMany({ employee });
+  // }
+
   if (!employee) {
     return { status: "NOT_FOUND", data: { message: "Employee not found!" } };
   }
