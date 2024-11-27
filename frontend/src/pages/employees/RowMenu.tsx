@@ -8,8 +8,9 @@ import { useNavigate } from "react-router-dom";
 import MoreHorizRoundedIcon from "@mui/icons-material/MoreHorizRounded";
 import { apiRequest } from "../../libs/apiRequest";
 import { useAuth } from "../../context/authContext";
+import { FormData } from "../../types";
 
-function RowMenu({ row, onDelete }: { row: any; onDelete: () => void }) {
+function RowMenu({ row, onDelete }: { row: FormData; onDelete: () => void }) {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
   const handleDelete = async () => {

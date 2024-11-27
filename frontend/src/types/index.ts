@@ -17,7 +17,6 @@ interface Contato {
   telefone: string;
   fotoPerfil: string;
   dataAniversario: string;
-
 }
 
 interface Funcionario {
@@ -41,3 +40,12 @@ export interface FormData {
   dataAlteracao?: string;
   id?: string;
 }
+
+export type HandleInputChangeType = (
+  e: any,
+  section: "contato" | "funcionario",
+  field: string,
+  subfield?: string
+) => void;
+
+export type Order = "asc" | "desc";

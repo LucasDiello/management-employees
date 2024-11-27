@@ -13,14 +13,15 @@ import {
   Radio,
 } from "@mui/material";
 import { FormLabel } from "@mui/joy";
+import { FormData, HandleInputChangeType } from "../../types";
 
 const Step3Form = ({
   formData,
   handleInputChange,
   errors,
 }: {
-  formData: any;
-  handleInputChange: any;
+  formData: FormData;
+  handleInputChange: HandleInputChangeType;
   errors: { [key: string]: string };
 }) => {
   return (

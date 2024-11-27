@@ -4,7 +4,6 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../libs/firebaseConfig";
 import { FormData } from "../types";
 import dayjs from "dayjs";
-import defaultUser from "../pages/addemployee/userDefault.jpg";
 
 pdfMake.vfs = vfsFonts.pdfMake.vfs;
 

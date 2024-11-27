@@ -16,6 +16,7 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import ProfileImageUpload from "./ProfileImageUpload";
 import axios from "axios";
+import { FormData, HandleInputChangeType } from "../../types";
 
 const Step1Form = ({
   formData,
@@ -24,15 +25,15 @@ const Step1Form = ({
   getInputProps,
   errors,
 }: {
-  formData: any;
-  handleInputChange: any;
+  formData: FormData;
+  handleInputChange: HandleInputChangeType;
   previewUrl: string | null;
   getInputProps: () => { [key: string]: any };
   errors: { [key: string]: string };
 }) => {
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
-  const [estadoSelecionado, setEstadoSelecionado] = useState(
+  const [selectedState, setselectedState] = useState(
     formData.contato.endereco.estado || ""
   );
 
@@ -48,10 +49,10 @@ const Step1Form = ({
   }, []);
 
   useEffect(() => {
-    if (estadoSelecionado) {
+    if (selectedState) {
       axios
         .get(
-          `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${estadoSelecionado}/municipios`
+          `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${selectedState}/municipios`
         )
         .then((response) => {
           setCities(response.data);
@@ -60,7 +61,7 @@ const Step1Form = ({
           console.error("Erro ao carregar cidades:", error);
         });
     }
-  }, [estadoSelecionado]);
+  }, [selectedState]);
   return (
     <>
       <h2>
@@ -248,7 +249,7 @@ const Step1Form = ({
               id="demo-simple-select-filled"
               value={formData.contato.endereco.estado}
               onChange={(e: SelectChangeEvent) => {
-                setEstadoSelecionado(e.target.value);
+                setselectedState(e.target.value);
                 handleInputChange(e, "contato", "endereco", "estado");
               }}
               sx={{

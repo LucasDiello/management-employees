@@ -9,14 +9,15 @@ import {
   SelectChangeEvent,
   FormHelperText,
 } from "@mui/material";
+import { FormData, HandleInputChangeType } from "../../types";
 
 const Step2Form = ({
   formData,
   handleInputChange,
   errors,
 }: {
-  formData: any;
-  handleInputChange: any;
+  formData: FormData;
+  handleInputChange: HandleInputChangeType;
   errors: { [key: string]: string };
 }) => {
   return (

@@ -1,7 +1,8 @@
 import dayjs from "dayjs";
 import React from "react";
+import { FormData } from "../../types";
 
-const Step4Form = ({ formData }: { formData: any }) => {
+const Step4Form = ({ formData }: { formData: FormData }) => {
   return (
     <>
       <div className="form-step3">

@@ -22,12 +22,6 @@ import { auth } from "../../libs/firebaseConfig";
 import { useAuth } from "../../context/authContext";
 import { useNavigate } from "react-router-dom";
 
-interface FormElements extends HTMLFormControlsCollection {
-  email: HTMLInputElement;
-  password: HTMLInputElement;
-  persistent: HTMLInputElement;
-}
-
 function ColorSchemeToggle(props: IconButtonProps) {
   const { onClick, ...other } = props;
   const { mode, setMode } = useColorScheme();
@@ -58,7 +52,7 @@ export default function Login() {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [error, setError] = React.useState("");
-  const [attemptCount, setAttemptCount] = React.useState(0); // contador de tentativas
+  const [attemptCount, setAttemptCount] = React.useState(0);
 
   const navigate = useNavigate();
   const { updateUser } = useAuth();
